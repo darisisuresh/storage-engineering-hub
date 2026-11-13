@@ -4,6 +4,32 @@ import { normalizeWwn, raidCapacity, throughput, transferHours, generateZoning, 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ICONS = {
+ home:'<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',
+ terminal:'<rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3m6 0h4"/>',
+ network:'<rect x="8" y="3" width="8" height="6" rx="2"/><rect x="2" y="16" width="8" height="5" rx="2"/><rect x="14" y="16" width="8" height="5" rx="2"/><path d="M12 9v4m-6 3v-3h12v3"/>',
+ transfer:'<path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/>',
+ calculator:'<rect x="5" y="2" width="14" height="20" rx="3"/><path d="M8 6h8M8 11h1m6 0h1m-8 4h1m6 0h1m-8 4h1m6 0h1"/>',
+ activity:'<path d="M3 12h4l3-8 4 16 3-8h4"/>',
+ upgrade:'<path d="M12 16V3m-5 5 5-5 5 5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>',
+ code:'<path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-13-2 20"/>',
+ spark:'<path d="m12 3 2.8 6.2L21 12l-6.2 2.8L12 21l-2.8-6.2L3 12l6.2-2.8ZM20 2v4m-2-2h4"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/>',
+ database:'<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+ layers:'<path d="m12 3 10 5-10 5L2 8Zm-9 9 9 5 9-5M3 16l9 5 9-5"/>',
+ server:'<rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01M11 6.5h6m-6 11h6"/>',
+ arrow:'<path d="M5 12h14m-5-5 5 5-5 5"/>',
+ chevron:'<path d="m9 5 7 7-7 7"/>',
+ shield:'<path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6Z"/><path d="m8 12 3 3 5-5"/>',
+ file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Zm0 0v6h6M8 13h8m-8 4h5"/>',
+ scan:'<path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m8 0h3a2 2 0 0 0 2-2v-3M7 12h10m-7-4v8m4-8v8"/>',
+ search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',
+ moon:'<path d="M21 13A9 9 0 0 1 11 3a9 9 0 1 0 10 10Z"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>',
+ menu:'<path d="M4 6h16M4 12h16M4 18h16"/>'
+};
+function icon(name, extra = '') { return `<svg class="icon ${extra}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.terminal}</svg>`; }
+const NAV_ICONS = {home:'home',commands:'terminal',zoning:'network',translator:'transfer',calculators:'calculator',incidents:'activity',upgrades:'upgrade',automation:'code',prompts:'spark',about:'info'};
 const storageKey = 'seh-v1';
 let state;
 try { state = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch { state = {}; }
@@ -38,7 +64,7 @@ function download(text, filename, type = 'text/plain') {
   a.href = url; a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1500);
 }
 function codeBlock(text, label = 'CLI REFERENCE') {
-  return `<div class="codeblock"><div class="codebar"><span>${escape(label)}</span><button type="button" data-action="copy-code">Copy</button></div><pre class="code">${escape(text)}</pre></div>`;
+  return `<div class="codeblock"><div class="codebar"><span class="code-label"><span class="code-indicator"></span>${escape(label)}</span><button type="button" data-action="copy-code">Copy</button></div><pre class="code">${escape(text)}</pre></div>`;
 }
 function pageTitle(kicker, title, subtitle, meta = '') {
   return `<section class="hero"><div><p class="eyebrow">${escape(kicker)}</p><h1>${title}</h1><p class="intro">${escape(subtitle)}</p></div>${meta ? `<div class="hero-meta">${meta}</div>` : ''}</section>`;
@@ -50,22 +76,32 @@ function tabs(items, route, active) {
   return `<div class="tabs">${items.map(item => `<a href="#${route}/${escape(item.id)}" class="${active === item.id ? 'selected' : ''}" ${active === item.id ? 'aria-current="page"' : ''}>${escape(item.title)}</a>`).join('')}</div>`;
 }
 function readForm(form) { return Object.fromEntries(new FormData(form)); }
-function setTheme(theme) { document.documentElement.dataset.theme = theme; $('#theme').setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`); }
+function setTheme(theme) { document.documentElement.dataset.theme = theme; $('#theme').innerHTML = icon(theme === 'dark' ? 'sun' : 'moon'); $('#theme').setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`); }
 setTheme(state.theme === 'dark' ? 'dark' : 'light');
+$('#menu').innerHTML = icon('menu');
+$('#search-open').insertAdjacentHTML('afterbegin', icon('search'));
 $('#theme').addEventListener('click', () => { state.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; setTheme(state.theme); save(); });
 $('#menu').addEventListener('click', () => { const open = document.body.classList.toggle('menu-open'); $('#menu').setAttribute('aria-expanded', String(open)); });
 document.addEventListener('click', e => { if (document.body.classList.contains('menu-open') && !e.target.closest('aside') && !e.target.closest('#menu')) closeMenu(); });
 function closeMenu() { document.body.classList.remove('menu-open'); $('#menu').setAttribute('aria-expanded','false'); }
 
 function overview() {
-  return pageTitle('Suresh Kumar Darisi / Engineering workspace', 'Less searching.<br><em>More engineering.</em>', 'A practical desk for storage operations. Look up a command, prepare a change, and keep your evidence in order.', `<span class="hero-stat">${COMMANDS.length}</span> COMMANDS<br>4 VENDORS · 1 WORKSPACE`)
-    + `<div class="section-head"><h2>Your vendor workspaces</h2><small>01 / COMMAND REFERENCE</small></div><div class="grid cols-4">${Object.entries(VENDORS).map(([key,v],i) => `<a href="#commands/${key}" class="card vendor-link"><span class="vendor-icon" style="color:${v.color}">0${i+1}</span><h3>${v.name}</h3><p>${v.note}</p><div class="card-foot"><span>${COMMANDS.filter(c=>c.vendor===key).length} COMMANDS</span><span>↗</span></div></a>`).join('')}</div>
-    <section class="feature"><div><div class="micro">THE CHANGE WORKBENCH</div><h2 class="section-gap">Two fabrics.<br>One considered plan.</h2><p>Generate Cisco or Brocade zoning, compare the backout plan, and export your change ticket.</p><a class="btn" href="#zoning">Open zoning workbench <span>↗</span></a></div><pre># A / PRIMARY FABRIC\nzone name Z_app_array_A_1 vsan 10\n  member device-alias H_app_A\n  member device-alias T_array_A_1\n\n# B / INDEPENDENT FABRIC\n# Separate WWPNs. Separate configuration.\n# Review → Approve → Activate → Verify.</pre></section>
-    <div class="section-head"><h2>Keep the next step close</h2><small>02 / ENGINEERING TOOLS</small></div><div class="grid cols-3">
-      <a href="#calculators" class="card quick-link"><div><span class="micro">CAPACITY & PERFORMANCE</span><h3 class="section-gap">Do the numbers.</h3><p>RAID capacity, IOPS and transfer time.</p></div><span>↗</span></a>
-      <a href="#incidents" class="card quick-link"><div><span class="micro">INCIDENT RESPONSE</span><h3 class="section-gap">Start with evidence.</h3><p>Four guided triage checklists.</p></div><span>↗</span></a>
-      <a href="#upgrades" class="card quick-link"><div><span class="micro">CHANGE READINESS</span><h3 class="section-gap">Plan the upgrade.</h3><p>Prechecks, checkpoints and validation.</p></div><span>↗</span></a>
-    </div><section class="card section-gap"><div class="row between"><div><span class="micro">SMALL TOOL / WWPN FORMATTER</span><h3>Clean up a port identifier</h3></div><a class="inline-link" href="#calculators">All calculators ↗</a></div><form id="wwn-form" class="toolbar"><input name="wwn" aria-label="WWPN to format" placeholder="Paste a 16-digit WWPN, with or without separators" required><button class="btn" type="submit">Format WWPN</button></form><div id="wwn-result" aria-live="polite"></div></section>`;
+  const vendorIcons = {netapp:'database',powermax:'layers',cisco:'network',brocade:'server'};
+  return `<section class="home-hero"><div class="hero-copy"><p class="eyebrow"><span class="status-dot"></span> YOUR STORAGE ENGINEERING WORKSPACE</p><h1>Less searching.<br><em>More engineering.</em></h1><p class="intro">The commands, calculations, and change plans you need.<br class="desktop-break"> One thoughtful workspace for every fabric.</p><div class="hero-actions"><a class="btn primary" href="#commands">Explore commands ${icon('arrow')}</a><a class="btn hero-secondary" href="#zoning">Build a zoning plan ${icon('chevron')}</a></div><div class="hero-signature">${icon('shield')} Designed for deliberate operations</div></div><div class="topology-art" aria-label="Illustration of a host connected to storage through two separate fabrics" role="img"><div class="art-label"><span>DUAL-FABRIC ARCHITECTURE</span><span class="art-dot"></span></div><svg viewBox="0 0 360 265" fill="none" aria-hidden="true"><defs><linearGradient id="wire" x1="70" y1="50" x2="280" y2="230" gradientUnits="userSpaceOnUse"><stop stop-color="#64e4b4"/><stop offset="1" stop-color="#56b7cc"/></linearGradient></defs><path class="diagram-grid" d="M0 45H360M0 95H360M0 145H360M0 195H360M0 245H360M30 0V265M80 0V265M130 0V265M180 0V265M230 0V265M280 0V265M330 0V265"/><path class="diagram-wire" d="M180 65V87Q180 102 160 102H94Q80 102 80 119V133M180 65V87Q180 102 200 102H266Q280 102 280 119V133M80 167V185Q80 201 100 201H160Q180 201 180 219M280 167V185Q280 201 260 201H200Q180 201 180 219"/><rect x="130" y="16" width="100" height="50" rx="12" class="diagram-node"/><path d="M149 32h18v13h-18zm4 17h10m-5-4v4" stroke="#a8dec8" stroke-width="1.5"/><text x="194" y="46" class="diagram-text">HOST</text><rect x="28" y="124" width="104" height="49" rx="12" class="diagram-node fabric-a"/><circle cx="48" cy="148" r="4" fill="#78edb8"/><text x="88" y="152" class="diagram-text">FABRIC A</text><rect x="228" y="124" width="104" height="49" rx="12" class="diagram-node fabric-b"/><circle cx="248" cy="148" r="4" fill="#7cd4ef"/><text x="288" y="152" class="diagram-text">FABRIC B</text><rect x="123" y="218" width="114" height="45" rx="12" class="diagram-node"/><path d="M141 231h15v7h-15zm0 10h15v7h-15z" stroke="#a8dec8" stroke-width="1.5"/><text x="198" y="245" class="diagram-text">STORAGE</text><circle cx="80" cy="106" r="3" fill="#a6f4d1"/><circle cx="280" cy="199" r="3" fill="#97dce9"/></svg><div class="art-footer"><span>INDEPENDENT PATHS</span><span>ILLUSTRATIVE TOPOLOGY</span></div></div></section>
+    <div class="capability-strip"><div>${icon('terminal')}<strong>${COMMANDS.length}</strong><span>inspection commands</span></div><div>${icon('database')}<strong>4</strong><span>vendor platforms</span></div><div>${icon('network')}<strong>2</strong><span>independent fabrics</span></div><div>${icon('shield')}<strong>Local</strong><span>browser-based tools</span></div></div>
+    <div class="section-head"><div><span class="section-kicker">THE COMMAND DESK</span><h2>Your vendor workspaces</h2></div><a class="section-link" href="#commands">View all commands ${icon('arrow')}</a></div><div class="grid cols-4 vendor-grid">${Object.entries(VENDORS).map(([key,v]) => `<a href="#commands/${key}" class="card vendor-link vendor-${key}"><div class="vendor-top"><span class="vendor-icon">${icon(vendorIcons[key])}</span><span class="vendor-arrow">${icon('arrow')}</span></div><h3>${v.name}</h3><p>${v.note}</p><div class="card-foot"><span>${COMMANDS.filter(c=>c.vendor===key).length} COMMANDS</span><span class="vendor-chip">${v.short}</span></div></a>`).join('')}</div>
+    <section class="feature"><div class="feature-copy"><div class="feature-label">${icon('network')} THE CHANGE WORKBENCH</div><h2>Two fabrics.<br>One considered plan.</h2><p>Prepare Cisco or Brocade zoning with a backout plan built in. Clear inputs. Reviewable output. Ready for your change ticket.</p><div class="feature-tags"><span>SIST & SIMT</span><span>Cisco & Brocade</span><span>Rollback included</span></div><a class="btn primary" href="#zoning">Open zoning workbench ${icon('arrow')}</a></div><div class="terminal-preview"><div class="terminal-title"><span class="window-dots"><i></i><i></i><i></i></span><span>fabric-a.conf</span><span>CLI</span></div><pre><span class="syntax-comment"># FABRIC A / IMPLEMENTATION PREVIEW</span>
+<span class="syntax-key">zone name</span> Z_app_array_A_1 <span class="syntax-key">vsan</span> <span class="syntax-number">10</span>
+  <span class="syntax-key">member device-alias</span> H_app_A
+  <span class="syntax-key">member device-alias</span> T_array_A_1
+
+<span class="syntax-comment"># Review → Approve → Activate → Verify</span>
+<span class="syntax-comment"># Fabric B has its own change plan.</span></pre><div class="terminal-foot">${icon('file')} Implementation + backout + verification</div></div></section>
+    <div class="section-head"><div><span class="section-kicker">YOUR EVERYDAY TOOLKIT</span><h2>Keep the next step close</h2></div><span class="section-note">Less friction. Better preparation.</span></div><div class="grid cols-3 quick-grid">
+      <a href="#calculators" class="card quick-link"><span class="tool-icon tool-blue">${icon('calculator')}</span><span class="quick-content"><span class="micro">CAPACITY & PERFORMANCE</span><h3>Do the numbers.</h3><p>RAID capacity, IOPS and transfer time.</p></span><span class="quick-arrow">${icon('arrow')}</span></a>
+      <a href="#incidents" class="card quick-link"><span class="tool-icon tool-amber">${icon('activity')}</span><span class="quick-content"><span class="micro">INCIDENT RESPONSE</span><h3>Start with evidence.</h3><p>Four guided triage checklists.</p></span><span class="quick-arrow">${icon('arrow')}</span></a>
+      <a href="#upgrades" class="card quick-link"><span class="tool-icon tool-purple">${icon('upgrade')}</span><span class="quick-content"><span class="micro">CHANGE READINESS</span><h3>Plan the upgrade.</h3><p>Prechecks, checkpoints and validation.</p></span><span class="quick-arrow">${icon('arrow')}</span></a>
+    </div><section class="card section-gap formatter-card"><div class="formatter-heading"><span class="tool-icon">${icon('scan')}</span><div><span class="micro">A SMALL TOOL FOR THE DETAILS</span><h3>Clean up a port identifier</h3></div><a class="inline-link" href="#calculators">All calculators ${icon('arrow')}</a></div><form id="wwn-form" class="toolbar"><input name="wwn" aria-label="WWPN to format" placeholder="Paste a 16-digit WWPN, with or without separators" required><button class="btn" type="submit">Format WWPN ${icon('arrow')}</button></form><div id="wwn-result" aria-live="polite"></div></section>`;
 }
 function paramsFor(command) { return { ...command.values, ...(state.params[command.id] || {}) }; }
 function commandCard(c, editable = true) {
@@ -156,8 +192,9 @@ function render() {
   currentId = parts[1]||'';
   document.title = `${NAV.find(n=>n[0]===current)[1]} · Storage Engineering Hub`;
   $('#breadcrumb').textContent = NAV.find(n=>n[0]===current)[1];
-  $('#navigation').innerHTML = NAV.map(([key,label,icon])=>`<a href="#${key}" class="${current===key?'active':''}" ${current===key?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${icon}</span><span>${label}</span>${key==='commands'?`<span class="nav-count">${COMMANDS.length}</span>`:''}</a>`).join('');
+  $('#navigation').innerHTML = NAV.map(([key,label])=>`<a href="#${key}" class="${current===key?'active':''}" ${current===key?'aria-current="page"':''}><span class="nav-icon">${icon(NAV_ICONS[key])}</span><span>${label}</span>${key==='commands'?`<span class="nav-count">${COMMANDS.length}</span>`:''}</a>`).join('');
   const views = {home:overview,commands:commandsPage,zoning:zoningPage,translator:translatorPage,calculators:calculatorsPage,incidents:incidentsPage,upgrades:upgradesPage,automation:automationPage,prompts:promptsPage,about:aboutPage};
+  $('#main').dataset.page = current;
   $('#main').innerHTML = views[current]();
   if (current==='commands') updateCommands();
   if (current==='zoning') { zoningOutput=null; refreshZoningVendor(); }

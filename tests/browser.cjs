@@ -9,7 +9,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
  const base = process.env.TEST_URL || 'http://127.0.0.1:3000/';
  await page.goto(base);
  await page.getByRole('heading',{name:'Less searching. More engineering.'}).waitFor();
- await page.screenshot({path:path.join(os.tmpdir(),'storage-hub-desktop.png'),fullPage:true});
+ await page.screenshot({path:path.join(os.tmpdir(),'storage-hub-desktop.png'),fullPage:true,animations:'disabled'});
  // Global search opens from either platform shortcut and targets the matching command.
  await page.keyboard.press('Control+k');
  await page.locator('#global-search').fill('flogi');
@@ -67,7 +67,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
    }
  }
  await page.setViewportSize({width:390,height:844});await page.goto(base+'#home');await page.locator('#menu').click();assert.equal(await page.locator('#menu').getAttribute('aria-expanded'),'true');await page.locator('#navigation a[href="#zoning"]').click();await page.waitForFunction(()=>document.querySelector('#menu').getAttribute('aria-expanded')==='false');assert.equal(await page.locator('#menu').getAttribute('aria-expanded'),'false');await page.goto(base+'#home');await page.waitForFunction(()=>document.querySelector('#sidebar').getBoundingClientRect().right<=0);
- await page.screenshot({path:path.join(os.tmpdir(),'storage-hub-mobile.png'),fullPage:true});
+ await page.screenshot({path:path.join(os.tmpdir(),'storage-hub-mobile.png'),fullPage:true,animations:'disabled'});
  assert.deepEqual(errors,[]);
  await browser.close();console.log('Browser checks passed: search, injection escaping, saved parameters, favorites, zoning validation and downloads, calculators, checklists, upgrades, translation, automation, prompt composition, themes, and 30 responsive route checks.');
 })().catch(e=>{console.error(e);process.exit(1);});
