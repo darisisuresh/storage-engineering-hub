@@ -1,4 +1,6 @@
+import {PURE_COMMANDS, PURE_DOCS} from './pure-data.js';
 export const VENDORS = {
+  pure: { name: 'Pure Storage', short: 'Purity', note: 'FlashArray, hosts & protection', color: '#cf652a', source: PURE_DOCS.portal },
   netapp: { name: 'NetApp ONTAP', short: 'ONTAP', note: 'Volumes, LUNs & replication', color: '#1d6951', source: 'https://docs.netapp.com/us-en/ontap-cli/' },
   powermax: { name: 'Dell PowerMax', short: 'PowerMax', note: 'Arrays, devices & masking', color: '#855c21', source: 'https://www.dell.com/support/manuals/en-us/solutions-enabler/' },
   cisco: { name: 'Cisco MDS', short: 'MDS', note: 'VSANs, logins & zoning', color: '#2b62a0', source: 'https://www.cisco.com/c/en/us/td/docs/dcn/mds9000/sw/9x/command/cisco-mds-9000-nx-os-command-reference-guide-9x/show_commands.html' },
@@ -6,6 +8,7 @@ export const VENDORS = {
 };
 const c = (vendor, id, title, category, syntax, description, values = {}) => ({ vendor, id, title, category, syntax, description, values });
 export const COMMANDS = [
+  ...PURE_COMMANDS.filter(c=>c.effect==='Read-only'),
   c('netapp','nt-health','Cluster health','Health','cluster show','Inspect cluster membership and node health.'),
   c('netapp','nt-ha','HA partner readiness','Health','storage failover show','Check partner visibility and takeover readiness.'),
   c('netapp','nt-capacity','Aggregate capacity','Capacity','storage aggregate show','Inspect physical aggregate allocation before planning growth.'),
@@ -40,11 +43,11 @@ export const COMMANDS = [
   c('brocade','br-name','Name server entries','Connectivity','nsshow','Inspect locally registered Fibre Channel devices.'),
 ];
 export const TRANSLATIONS = [
-  { id:'inventory', title:'Find software and inventory', note:'These inspect different object types; they are operational counterparts, not interchangeable commands.', commands:{netapp:'cluster show\nsystem image show',powermax:'symcfg list',cisco:'show version',brocade:'version\nswitchshow'} },
-  { id:'connectivity', title:'Investigate host connectivity', note:'Follow the path from host multipathing through switch login and zoning to array presentation.', commands:{netapp:'lun mapping show',powermax:'symaccess -sid {{sid}} list view',cisco:'show flogi database\nshow fcns database',brocade:'switchshow\nnsshow'} },
-  { id:'zoning', title:'Inspect effective access', note:'Array mappings and fabric zoning are separate layers of the same host path.', commands:{netapp:'lun mapping show -vserver {{svm}}',powermax:'symaccess -sid {{sid}} list view',cisco:'show zoneset active vsan {{vsan}}',brocade:'cfgactvshow'} },
-  { id:'capacity', title:'Review capacity and devices', note:'Physical aggregate space, logical device capacity and switch port inventory use different units and scopes.', commands:{netapp:'storage aggregate show\nvolume show',powermax:'symdev -sid {{sid}} list',cisco:'show interface brief',brocade:'switchshow'} },
-  { id:'replication', title:'Inspect replication and fabric reachability', note:'Switch membership is a transport check; switches do not expose ONTAP or SRDF replication state.', commands:{netapp:'snapmirror show',powermax:'symcfg -sid {{sid}} list -rdfg all',cisco:'show topology',brocade:'fabricshow'} },
+  { id:'inventory', title:'Find software and inventory', note:'These inspect different object types; they are operational counterparts, not interchangeable commands.', commands:{pure:'purearray list\npurearray list --controller',netapp:'cluster show\nsystem image show',powermax:'symcfg list',cisco:'show version',brocade:'version\nswitchshow'} },
+  { id:'connectivity', title:'Investigate host connectivity', note:'Follow the path from host multipathing through switch login and zoning to array presentation.', commands:{pure:'purehost list\npureport list --initiator',netapp:'lun mapping show',powermax:'symaccess -sid {{sid}} list view',cisco:'show flogi database\nshow fcns database',brocade:'switchshow\nnsshow'} },
+  { id:'zoning', title:'Inspect effective access', note:'Array mappings and fabric zoning are separate layers of the same host path.', commands:{pure:'purevol list --connect {{vol}}',netapp:'lun mapping show -vserver {{svm}}',powermax:'symaccess -sid {{sid}} list view',cisco:'show zoneset active vsan {{vsan}}',brocade:'cfgactvshow'} },
+  { id:'capacity', title:'Review capacity and devices', note:'Physical aggregate space, logical device capacity and switch port inventory use different units and scopes.', commands:{pure:'purearray list --space\npurevol list --space',netapp:'storage aggregate show\nvolume show',powermax:'symdev -sid {{sid}} list',cisco:'show interface brief',brocade:'switchshow'} },
+  { id:'replication', title:'Inspect replication and fabric reachability', note:'Switch membership is a transport check; switches do not expose ONTAP or SRDF replication state.', commands:{pure:'purearray list --connect\npurepod replica-link list',netapp:'snapmirror show',powermax:'symcfg -sid {{sid}} list -rdfg all',cisco:'show topology',brocade:'fabricshow'} },
 ];
 export const PLAYBOOKS = [
   { id:'paths', title:'Host has lost storage paths', severity:'P1 / Connectivity', summary:'Establish impact and preserve the remaining path before changing the fabric.', steps:[
@@ -54,7 +57,7 @@ export const PLAYBOOKS = [
     ['Compare effective zoning','Check active membership against the approved baseline. Do not assume a saved definition is active.'],
     ['Escalate with evidence','Attach timestamps, path state, switch counters and relevant array events to the vendor case. Obtain approval before any disruptive action.'],
     ['Verify recovery','Confirm expected redundant paths, successful application I/O and no recurring path failures during the agreed observation interval.'],
-  ], commands:['cs-flogi','cs-zones','br-effective','nt-map','pm-mv'] },
+  ], commands:['pure-host-connect','pure-initiators','cs-flogi','cs-zones','br-effective','nt-map','pm-mv'] },
   { id:'latency', title:'Unexpected I/O latency', severity:'P2 / Performance', summary:'Use correlated measurements to distinguish host, fabric and array bottlenecks.', steps:[
     ['Define the measurement','Record application latency, timestamps, workload change, block size, queue depth and baseline.'],
     ['Check host saturation','Compare CPU, memory pressure, I/O queues and multipath balance with the baseline.'],
@@ -62,7 +65,7 @@ export const PLAYBOOKS = [
     ['Review array telemetry','Compare front-end latency, backend latency, throughput and utilization in the vendor management tools.'],
     ['Change one variable','Agree a controlled mitigation and rollback; do not disable a port solely because its lifetime counter is nonzero.'],
     ['Observe the result','Re-measure application latency and confirm that an apparent improvement persists under comparable load.'],
-  ], commands:['br-errors','br-optics','cs-optics','nt-event'] },
+  ], commands:['pure-monitor','pure-alerts','br-errors','br-optics','cs-optics','nt-event'] },
   { id:'space', title:'Capacity pressure or write failures', severity:'P1 / Capacity', summary:'Identify the exhausted allocation layer before expanding or deleting anything.', steps:[
     ['Capture affected objects','Record filesystem, datastore, LUN, volume and pool identifiers along with failure timestamps.'],
     ['Locate the constraint','Compare logical allocation, physical free capacity, snapshots and quotas. A large thin LUN does not guarantee physical space.'],
@@ -70,7 +73,7 @@ export const PLAYBOOKS = [
     ['Plan a capacity change','Validate available physical capacity and the approved expansion procedure. Preserve required retention and recovery points.'],
     ['Execute the approved recovery','Use the vendor-supported procedure for the exact release. Record pre-change and post-change capacity.'],
     ['Confirm end-to-end recovery','Check writable state, application transactions, alert clearance and the capacity forecast.'],
-  ], commands:['nt-capacity','nt-vol','nt-lun','pm-dev'] },
+  ], commands:['pure-space','pure-volume-space','nt-capacity','nt-vol','nt-lun','pm-dev'] },
   { id:'replication', title:'Replication is outside its RPO', severity:'P2 / Data protection', summary:'Separate stale reporting, transport faults and replication backlog before selecting a recovery action.', steps:[
     ['Record the protection objective','Capture the required RPO, last confirmed recovery point, relationship identifiers and affected services.'],
     ['Inspect relationship state','Review replication status and event chronology on the source and destination.'],
@@ -78,15 +81,28 @@ export const PLAYBOOKS = [
     ['Estimate backlog','Compare incoming write rate with transfer progress. Account for the bandwidth available to catch up.'],
     ['Approve the repair','Agree the vendor-supported recovery procedure. Failover requires an application and consistency decision; it is not a generic repair step.'],
     ['Validate protection','Confirm successful replication and an acceptable recovery point with the service owner.'],
-  ], commands:['nt-dr','pm-rdf','br-fabric'] },
+  ], commands:['pure-pods','pure-replica-links','nt-dr','pm-rdf','br-fabric'] },
 ];
 export const UPGRADES = [
+  {vendor:'pure',title:'Purity//FA upgrade readiness',pre:['Confirm the exact FlashArray model, installed Purity release, target path and host interoperability with the vendor.','Verify both controller states, redundant host paths, support connectivity and a recoverable application baseline.','Record replication and protection state; agree the supported service method, observation checkpoints and rollback limits.'],execute:['Use the vendor-approved procedure and service arrangements for this specific upgrade.','Observe each controller transition and host I/O; pause at the agreed checkpoint if paths or applications deviate from baseline.'],post:['Verify the intended Purity release, controller health and full host path redundancy.','Confirm volume presentation, application transactions, alerts and protection state.'],commands:['pure-array','pure-controllers','pure-alerts']},
   {vendor:'netapp', title:'ONTAP rolling upgrade', pre:['Verify the supported upgrade path and hardware interoperability for the target release.','Check cluster health, HA readiness, backup availability and host multipath redundancy.','Read target-release cautions and record the vendor-approved rollback boundary.'], execute:['Follow the release-specific vendor procedure; validate the uploaded image before scheduling it.','Observe each controller transition and verify host I/O before progressing.'], post:['Verify release consistency and cluster/HA health.','Check LUN paths, NAS access, replication and application transactions.'], commands:['nt-health','nt-ha','nt-dr']},
   {vendor:'powermax', title:'PowerMax service upgrade', pre:['Confirm the exact array model, microcode target and interoperability with Dell support.','Arrange the supported service delivery method and required support involvement.','Capture alerts, host path redundancy, replication status and the application baseline.'],execute:['Use the Dell-approved service plan for this array; no generic firmware command is supplied.','Track checkpoints and application health with the service engineer.'],post:['Confirm the reported code level, cleared alerts and all host paths.','Verify masking, replication and application I/O.'],commands:['pm-arrays','pm-mv','pm-rdf']},
   {vendor:'cisco', title:'MDS upgrade planning', pre:['Check hardware, current NX-OS release and the supported target path.','Verify whether the specific upgrade is nondisruptive; do not assume ISSU support.','Save configuration and collect active zoning, fabric topology and host path baselines.'],execute:['Apply the Cisco release-specific upgrade procedure within the approved window.','Validate one fabric and its host paths before changing the redundant fabric.'],post:['Confirm software state, port recovery and active zoneset membership.','Check fabric stability and application path redundancy.'],commands:['cs-version','cs-interface','cs-zones']},
   {vendor:'brocade', title:'Fabric OS upgrade planning', pre:['Check switch model, FOS release notes and the supported intermediate upgrade steps.','Back up switch configuration and capture zoning, fabric membership and counters.','Confirm host path redundancy and the disruption behavior for this exact platform.'],execute:['Follow the supported firmware procedure for the selected switch and FOS release.','Pause at the vendor checkpoints and validate one fabric before the other.'],post:['Verify software version, fabric membership and effective zoning.','Compare new counter deltas and confirm host path recovery.'],commands:['br-version','br-switch','br-effective']},
 ];
 export const AUTOMATION = [
+ {id:'pure-inventory',title:'Pure FlashArray inspection capture',language:'Shell',note:'Read-only SSH example. Set PURE_SSH_TARGET to a known management account and array hostname. Use trusted SSH host keys and your approved authentication method. No password or API token is embedded.',code:`#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+: "\u0024{PURE_SSH_TARGET:?Set the approved user@array target}"
+[[ "$PURE_SSH_TARGET" =~ ^[a-zA-Z0-9_.-]+@[a-zA-Z0-9_.-]+$ ]] || exit 2
+capture_dir="pure-$(date -u +%Y%m%dT%H%M%SZ)"
+mkdir "$capture_dir"
+ssh -o BatchMode=yes -o StrictHostKeyChecking=yes "$PURE_SSH_TARGET" 'purearray list' > "$capture_dir/array.txt"
+ssh -o BatchMode=yes -o StrictHostKeyChecking=yes "$PURE_SSH_TARGET" 'purehost list' > "$capture_dir/hosts.txt"
+ssh -o BatchMode=yes -o StrictHostKeyChecking=yes "$PURE_SSH_TARGET" 'purevol list --connect' > "$capture_dir/connections.txt"
+printf 'Saved read-only evidence to %s\\n' "$capture_dir"
+`},
  {id:'ontap-rest', title:'ONTAP volume inventory', language:'Python', note:'Read-only REST inventory. Requires Python requests, a trusted CA chain and an ONTAP account with appropriate read access.', code:`import os
 import requests
 
@@ -167,6 +183,9 @@ export const PROMPTS = [
  {id:'automation',title:'Automation code review',role:'Storage automation reviewer',instructions:'Review this automation for input validation, credential handling, TLS verification, pagination, timeouts, idempotency and rollback. Explain which actions read state and which change it. Do not invent successful execution results.'},
 ];
 export const SOURCES = [
+ ['Pure Storage / Everpure documentation', PURE_DOCS.portal],
+ ['FlashArray family datasheet', PURE_DOCS.family],
+ ['Requested Pure topic reference', PURE_DOCS.reference],
  ['NetApp command reference', 'https://docs.netapp.com/us-en/ontap-cli/'],
  ['NetApp ONTAP REST API', 'https://docs.netapp.com/us-en/ontap-restapi/'],
  ['Cisco MDS show commands', VENDORS.cisco.source],

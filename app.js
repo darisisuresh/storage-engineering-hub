@@ -1,3 +1,5 @@
+import {purePage,afterPureRender,initPure} from './pure-ui.js';
+import {PURE_TOPICS, PURE_BUILDERS} from './pure-data.js';
 import { VENDORS, COMMANDS, TRANSLATIONS, PLAYBOOKS, UPGRADES, AUTOMATION, PROMPTS, SOURCES } from './data.js';
 import { normalizeWwn, raidCapacity, throughput, transferHours, generateZoning, fillTemplate } from './core.js';
 
@@ -29,7 +31,7 @@ const ICONS = {
  menu:'<path d="M4 6h16M4 12h16M4 18h16"/>'
 };
 function icon(name, extra = '') { return `<svg class="icon ${extra}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.terminal}</svg>`; }
-const NAV_ICONS = {home:'home',commands:'terminal',zoning:'network',translator:'transfer',calculators:'calculator',incidents:'activity',upgrades:'upgrade',automation:'code',prompts:'spark',about:'info'};
+const NAV_ICONS = {pure:'database',home:'home',commands:'terminal',zoning:'network',translator:'transfer',calculators:'calculator',incidents:'activity',upgrades:'upgrade',automation:'code',prompts:'spark',about:'info'};
 const storageKey = 'seh-v1';
 let state;
 try { state = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch { state = {}; }
@@ -42,7 +44,7 @@ let zoningOutput = null;
 let generatedPrompt = '';
 let toastTimer;
 const NAV = [
- ['home','Overview','◫'],['commands','Vendor commands','⌘'],['zoning','SAN zoning','⋈'],['translator','CLI equivalents','⇄'],['calculators','Calculators','＋'],['incidents','Incident playbooks','△'],['upgrades','Upgrade planning','↑'],['automation','Automation library','⌁'],['prompts','AI prompt composer','✧'],['about','About & sources','ⓘ'],
+ ['home','Overview','◫'],['pure','Pure Storage','database'],['commands','Vendor commands','⌘'],['zoning','SAN zoning','⋈'],['translator','CLI equivalents','⇄'],['calculators','Calculators','＋'],['incidents','Incident playbooks','△'],['upgrades','Upgrade planning','↑'],['automation','Automation library','⌁'],['prompts','AI prompt composer','✧'],['about','About & sources','ⓘ'],
 ];
 function save() {
   try { localStorage.setItem(storageKey, JSON.stringify(state)); return true; }
@@ -86,10 +88,10 @@ document.addEventListener('click', e => { if (document.body.classList.contains('
 function closeMenu() { document.body.classList.remove('menu-open'); $('#menu').setAttribute('aria-expanded','false'); }
 
 function overview() {
-  const vendorIcons = {netapp:'database',powermax:'layers',cisco:'network',brocade:'server'};
+  const vendorIcons = {pure:'database',netapp:'database',powermax:'layers',cisco:'network',brocade:'server'};
   return `<section class="home-hero"><div class="hero-copy"><p class="eyebrow"><span class="status-dot"></span> YOUR STORAGE ENGINEERING WORKSPACE</p><h1>Less searching.<br><em>More engineering.</em></h1><p class="intro">The commands, calculations, and change plans you need.<br class="desktop-break"> One thoughtful workspace for every fabric.</p><div class="hero-actions"><a class="btn primary" href="#commands">Explore commands ${icon('arrow')}</a><a class="btn hero-secondary" href="#zoning">Build a zoning plan ${icon('chevron')}</a></div><div class="hero-signature">${icon('shield')} Designed for deliberate operations</div></div><div class="topology-art" aria-label="Illustration of a host connected to storage through two separate fabrics" role="img"><div class="art-label"><span>DUAL-FABRIC ARCHITECTURE</span><span class="art-dot"></span></div><svg viewBox="0 0 360 265" fill="none" aria-hidden="true"><defs><linearGradient id="wire" x1="70" y1="50" x2="280" y2="230" gradientUnits="userSpaceOnUse"><stop stop-color="#64e4b4"/><stop offset="1" stop-color="#56b7cc"/></linearGradient></defs><path class="diagram-grid" d="M0 45H360M0 95H360M0 145H360M0 195H360M0 245H360M30 0V265M80 0V265M130 0V265M180 0V265M230 0V265M280 0V265M330 0V265"/><path class="diagram-wire" d="M180 65V87Q180 102 160 102H94Q80 102 80 119V133M180 65V87Q180 102 200 102H266Q280 102 280 119V133M80 167V185Q80 201 100 201H160Q180 201 180 219M280 167V185Q280 201 260 201H200Q180 201 180 219"/><rect x="130" y="16" width="100" height="50" rx="12" class="diagram-node"/><path d="M149 32h18v13h-18zm4 17h10m-5-4v4" stroke="#a8dec8" stroke-width="1.5"/><text x="194" y="46" class="diagram-text">HOST</text><rect x="28" y="124" width="104" height="49" rx="12" class="diagram-node fabric-a"/><circle cx="48" cy="148" r="4" fill="#78edb8"/><text x="88" y="152" class="diagram-text">FABRIC A</text><rect x="228" y="124" width="104" height="49" rx="12" class="diagram-node fabric-b"/><circle cx="248" cy="148" r="4" fill="#7cd4ef"/><text x="288" y="152" class="diagram-text">FABRIC B</text><rect x="123" y="218" width="114" height="45" rx="12" class="diagram-node"/><path d="M141 231h15v7h-15zm0 10h15v7h-15z" stroke="#a8dec8" stroke-width="1.5"/><text x="198" y="245" class="diagram-text">STORAGE</text><circle cx="80" cy="106" r="3" fill="#a6f4d1"/><circle cx="280" cy="199" r="3" fill="#97dce9"/></svg><div class="art-footer"><span>INDEPENDENT PATHS</span><span>ILLUSTRATIVE TOPOLOGY</span></div></div></section>
-    <div class="capability-strip"><div>${icon('terminal')}<strong>${COMMANDS.length}</strong><span>inspection commands</span></div><div>${icon('database')}<strong>4</strong><span>vendor platforms</span></div><div>${icon('network')}<strong>2</strong><span>independent fabrics</span></div><div>${icon('shield')}<strong>Local</strong><span>browser-based tools</span></div></div>
-    <div class="section-head"><div><span class="section-kicker">THE COMMAND DESK</span><h2>Your vendor workspaces</h2></div><a class="section-link" href="#commands">View all commands ${icon('arrow')}</a></div><div class="grid cols-4 vendor-grid">${Object.entries(VENDORS).map(([key,v]) => `<a href="#commands/${key}" class="card vendor-link vendor-${key}"><div class="vendor-top"><span class="vendor-icon">${icon(vendorIcons[key])}</span><span class="vendor-arrow">${icon('arrow')}</span></div><h3>${v.name}</h3><p>${v.note}</p><div class="card-foot"><span>${COMMANDS.filter(c=>c.vendor===key).length} COMMANDS</span><span class="vendor-chip">${v.short}</span></div></a>`).join('')}</div>
+    <div class="capability-strip"><div>${icon('terminal')}<strong>${COMMANDS.length}</strong><span>inspection commands</span></div><div>${icon('database')}<strong>${Object.keys(VENDORS).length}</strong><span>vendor platforms</span></div><div>${icon('network')}<strong>2</strong><span>independent fabrics</span></div><div>${icon('shield')}<strong>Local</strong><span>browser-based tools</span></div></div>
+    <div class="section-head"><div><span class="section-kicker">THE COMMAND DESK</span><h2>Your vendor workspaces</h2></div><a class="section-link" href="#commands">View all commands ${icon('arrow')}</a></div><div class="grid cols-4 vendor-grid">${Object.entries(VENDORS).map(([key,v]) => `<a href="#${key==='pure'?'pure/overview':'commands/'+key}" class="card vendor-link vendor-${key}"><div class="vendor-top"><span class="vendor-icon">${icon(vendorIcons[key])}</span><span class="vendor-arrow">${icon('arrow')}</span></div><h3>${v.name}</h3><p>${v.note}</p><div class="card-foot"><span>${COMMANDS.filter(c=>c.vendor===key).length} COMMANDS</span><span class="vendor-chip">${v.short}</span></div></a>`).join('')}</div>
     <section class="feature"><div class="feature-copy"><div class="feature-label">${icon('network')} THE CHANGE WORKBENCH</div><h2>Two fabrics.<br>One considered plan.</h2><p>Prepare Cisco or Brocade zoning with a backout plan built in. Clear inputs. Reviewable output. Ready for your change ticket.</p><div class="feature-tags"><span>SIST & SIMT</span><span>Cisco & Brocade</span><span>Rollback included</span></div><a class="btn primary" href="#zoning">Open zoning workbench ${icon('arrow')}</a></div><div class="terminal-preview"><div class="terminal-title"><span class="window-dots"><i></i><i></i><i></i></span><span>fabric-a.conf</span><span>CLI</span></div><pre><span class="syntax-comment"># FABRIC A / IMPLEMENTATION PREVIEW</span>
 <span class="syntax-key">zone name</span> Z_app_array_A_1 <span class="syntax-key">vsan</span> <span class="syntax-number">10</span>
   <span class="syntax-key">member device-alias</span> H_app_A
@@ -110,6 +112,7 @@ function commandCard(c, editable = true) {
 }
 function commandsPage() {
   const vendor = VENDORS[currentId] ? currentId : 'all';
+  if(commandCategory!=='all'&&!COMMANDS.some(c=>(vendor==='all'||c.vendor===vendor)&&c.category===commandCategory))commandCategory='all';
   const vendorTabs = [{id:'all',title:'All vendors'},...Object.entries(VENDORS).map(([id,v])=>({id,title:v.short}))];
   return pageTitle('Command desk', vendor === 'all' ? 'The command reference.' : `${escape(VENDORS[vendor].name)}<em> / command desk</em>`, 'Read-only inspection commands with editable parameters. Save frequently used entries and verify syntax against your installed release.')
     + tabs(vendorTabs,'commands',vendor)
@@ -136,10 +139,10 @@ function renderZoningOutput() {
 }
 function translatorPage() {
   const t = TRANSLATIONS.find(t=>t.id===currentId)||TRANSLATIONS[0];
-  const values = state.translation || {sid:'000197800001',svm:'svm_apps',vsan:'10'};
+  const values = {sid:'000197800001',svm:'svm_apps',vsan:'10',vol:'app_data01',...state.translation};
   return pageTitle('Operational equivalents', 'Same question.<br><em>Different syntax.</em>', 'Compare the inspection workflow across platforms. This is a curated task map, not an arbitrary command converter.')
     + tabs(TRANSLATIONS.map(t=>({id:t.id,title:t.title})),'translator',t.id)
-    + `<section class="card"><h2>${escape(t.title)}</h2><p class="intro section-gap">${escape(t.note)}</p><form id="translation-form" class="grid cols-3 section-gap">${field('sid','PowerMax array SID',values.sid)}${field('svm','ONTAP storage VM',values.svm)}${field('vsan','Cisco VSAN',values.vsan)}</form></section><div id="translation-output" class="grid cols-2 section-gap">${Object.entries(t.commands).map(([key,syntax])=>`<article class="card" data-translation="${key}"><h3>${VENDORS[key].name}</h3>${codeBlock(fillTemplate(syntax,values),'READ-ONLY TASK REFERENCE')}</article>`).join('')}</div>`;
+    + `<section class="card"><h2>${escape(t.title)}</h2><p class="intro section-gap">${escape(t.note)}</p><form id="translation-form" class="grid cols-3 section-gap">${field('sid','PowerMax array SID',values.sid)}${field('svm','ONTAP storage VM',values.svm)}${field('vsan','Cisco VSAN',values.vsan)}${field('vol','Pure volume',values.vol)}</form></section><div id="translation-output" class="grid cols-2 section-gap">${Object.entries(t.commands).map(([key,syntax])=>`<article class="card" data-translation="${key}"><h3>${VENDORS[key].name}</h3>${codeBlock(fillTemplate(syntax,values),'READ-ONLY TASK REFERENCE')}</article>`).join('')}</div>`;
 }
 function calculatorsPage() {
   return pageTitle('Sizing desk', 'Numbers before<br><em>assumptions.</em>', 'Small, transparent calculations for planning. Units and exclusions are shown with every result.')
@@ -184,7 +187,7 @@ function promptsPage() {
 }
 function aboutPage() {
   return pageTitle('About this workspace', 'Built for<br><em>careful engineering.</em>', 'An independent implementation by Suresh Kumar Darisi. All application code, interface, checklists and examples in this repository were newly authored for this project.')
-    + `<div class="grid cols-2"><section class="card"><h2>What this toolkit does</h2><p class="intro section-gap">${COMMANDS.length} inspection commands across four vendor families, zoning plans, operational equivalents, sizing calculators, incident handoffs, upgrade readiness and prompt composition.</p><h3 class="section-gap">Data and privacy</h3><p class="small-text muted">This site makes no application API requests and does not connect to equipment. Theme, favorites, command parameters, zoning inputs, checklists and incident notes use local browser storage. Prompt contents are kept only in the active page. GitHub Pages handles normal website hosting requests.</p><p class="small-text muted">Anyone using this browser profile can access saved inputs. Export what you need before clearing local data.</p><button class="btn" data-action="clear-data">Clear this browser’s saved toolkit data</button><h3 class="section-gap">Project source</h3><a class="inline-link" href="https://github.com/darisisuresh/storage-engineering-hub" target="_blank" rel="noopener noreferrer">darisisuresh/storage-engineering-hub ↗</a></section><section class="card"><h2>Vendor references</h2><p class="intro section-gap">Command availability depends on model, code release and privilege. These references support syntax review; the toolkit is not vendor certification. The linked Broadcom manual is version-specific.</p><div class="source-list">${SOURCES.map(([title,url])=>`<a href="${escape(url)}" target="_blank" rel="noopener noreferrer">${escape(title)} ↗</a>`).join('')}</div></section></div>`;
+    + `<div class="grid cols-2"><section class="card"><h2>What this toolkit does</h2><p class="intro section-gap">${COMMANDS.length} inspection commands across five vendor families, zoning plans, operational equivalents, sizing calculators, incident handoffs, upgrade readiness and prompt composition.</p><h3 class="section-gap">Data and privacy</h3><p class="small-text muted">This site makes no application API requests and does not connect to equipment. Theme, favorites, command parameters, zoning inputs, checklists and incident notes use local browser storage. Prompt contents are kept only in the active page. GitHub Pages handles normal website hosting requests.</p><p class="small-text muted">Anyone using this browser profile can access saved inputs. Export what you need before clearing local data.</p><button class="btn" data-action="clear-data">Clear this browser’s saved toolkit data</button><h3 class="section-gap">Project source</h3><a class="inline-link" href="https://github.com/darisisuresh/storage-engineering-hub" target="_blank" rel="noopener noreferrer">darisisuresh/storage-engineering-hub ↗</a></section><section class="card"><h2>Vendor references</h2><p class="intro section-gap">Command availability depends on model, code release and privilege. These references support syntax review; the toolkit is not vendor certification. The linked Broadcom manual is version-specific.</p><div class="source-list">${SOURCES.map(([title,url])=>`<a href="${escape(url)}" target="_blank" rel="noopener noreferrer">${escape(title)} ↗</a>`).join('')}</div></section></div>`;
 }
 function render() {
   const parts = location.hash.slice(1).split('/');
@@ -193,18 +196,20 @@ function render() {
   document.title = `${NAV.find(n=>n[0]===current)[1]} · Storage Engineering Hub`;
   $('#breadcrumb').textContent = NAV.find(n=>n[0]===current)[1];
   $('#navigation').innerHTML = NAV.map(([key,label])=>`<a href="#${key}" class="${current===key?'active':''}" ${current===key?'aria-current="page"':''}><span class="nav-icon">${icon(NAV_ICONS[key])}</span><span>${label}</span>${key==='commands'?`<span class="nav-count">${COMMANDS.length}</span>`:''}</a>`).join('');
-  const views = {home:overview,commands:commandsPage,zoning:zoningPage,translator:translatorPage,calculators:calculatorsPage,incidents:incidentsPage,upgrades:upgradesPage,automation:automationPage,prompts:promptsPage,about:aboutPage};
+  const views = {home:overview,pure:()=>purePage(currentId,parts[2],{escape,codeBlock,field,icon,download}),commands:commandsPage,zoning:zoningPage,translator:translatorPage,calculators:calculatorsPage,incidents:incidentsPage,upgrades:upgradesPage,automation:automationPage,prompts:promptsPage,about:aboutPage};
   $('#main').dataset.page = current;
   $('#main').innerHTML = views[current]();
   if (current==='commands') updateCommands();
+  if (current==='pure') afterPureRender();
   if (current==='zoning') { zoningOutput=null; refreshZoningVendor(); }
   if (current==='prompts') generatedPrompt='';
   closeMenu();
   if ($('#search-dialog').open) $('#search-dialog').close();
   if (parts[2]) setTimeout(()=>{ const el=document.getElementById(`command-${parts[2]}`); if(el)el.scrollIntoView({block:'center'}); },0);
 }
-window.addEventListener('hashchange',()=>{ render(); if(!location.hash.split('/')[2])window.scrollTo(0,0); $('#main').focus({preventScroll:true}); });
+window.addEventListener('hashchange',()=>{ render(); if(current!=='commands'||!location.hash.split('/')[2])window.scrollTo(0,0); $('#main').focus({preventScroll:true}); });
 render();
+initPure({escape,codeBlock,field,icon,download});
 
 // All dynamic values are rendered through textContent or the escaping helper.
 document.addEventListener('input', e => {
@@ -294,9 +299,10 @@ const dialog=$('#search-dialog');
 function openSearch(){if(!dialog.open)dialog.showModal();$('#global-search').value='';search();$('#global-search').focus();}
 function search(){
   const q=$('#global-search').value.toLowerCase().trim();
-  const tools=NAV.filter(([key,label])=>`${key} ${label}`.toLowerCase().includes(q)).map(([key,label])=>({title:label,label:'TOOL',href:`#${key}`}));
-  const cmds=COMMANDS.filter(c=>`${c.title} ${c.syntax} ${c.description} ${VENDORS[c.vendor].name}`.toLowerCase().includes(q)).map(c=>({title:c.title,label:VENDORS[c.vendor].short,href:`#commands/${c.vendor}/${c.id}`}));
-  const entries=[...tools,...cmds].slice(0,24);
+  const tools=NAV.filter(([key,label])=>q.split(/\s+/).every(term=>`${key} ${label}`.toLowerCase().includes(term))).map(([key,label])=>({title:label,label:'TOOL',href:`#${key}`}));
+  const cmds=COMMANDS.filter(c=>q.split(/\s+/).every(term=>`${c.title} ${c.syntax} ${c.description} ${VENDORS[c.vendor].name}`.toLowerCase().includes(term))).map(c=>({title:c.title,label:VENDORS[c.vendor].short,href:`#commands/${c.vendor}/${c.id}`}));
+  const pureTopics=[...PURE_TOPICS,...PURE_BUILDERS.map(([id,title,note])=>['builders/'+id,title,note])].filter(([id,title,note])=>q.split(/\s+/).every(term=>`pure storage ${id} ${title} ${note}`.toLowerCase().includes(term))).map(([id,title])=>({title:'Pure / '+title,label:'PURE TOPIC',href:`#pure/${id}`}));
+  const entries=[...tools,...pureTopics,...cmds].slice(0,24);
   $('#search-results').innerHTML=entries.length?entries.map(r=>`<a href="${r.href}"><span>${escape(r.title)}</span><small>${escape(r.label)}</small></a>`).join(''):'<div class="empty">No results. Try a vendor name or operational task.</div>';
 }
 $('#search-open').addEventListener('click',openSearch);$('#search-close').addEventListener('click',()=>dialog.close());$('#global-search').addEventListener('input',search);

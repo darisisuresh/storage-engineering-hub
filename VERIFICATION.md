@@ -20,3 +20,12 @@ The shared shell and all ten routes were restyled with a forest sidebar, native 
 - Additional visual checks: dark theme, calculators, zoning and conditional Cisco fields; 25 route/width combinations from 320px through 1440px passed without horizontal overflow.
 - Light, dark, mobile, calculator and zoning screenshots reviewed.
 - Screenshot capture now disables transitions to record settled theme colors.
+
+## Pure Storage extension — 2026-11-13
+
+- Five vendors, 67 shared inspection commands; 66 dedicated Pure examples across 13 command families.
+- All 11 requested source topic areas mapped in PURE_COVERAGE.md and within the Pure overview.
+- 15 Node tests passed, including explicit injection/volume-separator rejection and acknowledgement checks.
+- Existing browser regression suite passed. Pure-specific browser suite passed 64 responsive route checks plus all five builders, downloads, search, question bank, models, prompt escaping and integration.
+- Builder inputs and prompt text are not persisted; stale generated output is cleared on edits.
+- New Shell inventory example syntax checked; no equipment execution.

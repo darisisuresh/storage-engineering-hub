@@ -51,7 +51,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
  const handoffPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Export incident handoff'}).click();await handoffPromise;
  await page.goto(base+'#upgrades/cisco');await page.locator('[name=target]').fill('Approved target');await page.locator('[data-check=upgrade-cisco]').first().check();await page.reload();assert.equal(await page.locator('[name=target]').inputValue(),'Approved target');
  await page.goto(base+'#translator/connectivity');await page.locator('[name=sid]').fill('12345');assert.match(await page.locator('[data-translation=powermax] pre').textContent(),/12345/);
- await page.goto(base+'#automation');const codePromise=page.waitForEvent('download');await page.getByRole('button',{name:'Download example'}).click();assert.equal((await codePromise).suggestedFilename(),'ontap-rest.py');
+ await page.goto(base+'#automation/ontap-rest');const codePromise=page.waitForEvent('download');await page.getByRole('button',{name:'Download example'}).click();assert.equal((await codePromise).suggestedFilename(),'ontap-rest.py');
  // Prompt composer consumes custom input, and invalidates output after editing.
  await page.goto(base+'#prompts');await page.locator('[name=platform]').fill('Brocade');await page.locator('[name=objective]').fill('Investigate latency');await page.locator('[name=evidence]').fill('Sample A counters at 13:00 UTC');await page.getByRole('button',{name:'Compose prompt'}).click();assert.match(await page.locator('#prompt-output pre').textContent(),/Sample A counters at 13:00 UTC/);
  await page.locator('[name=evidence]').fill('Changed observation');assert.equal(await page.locator('#prompt-output pre').count(),0);

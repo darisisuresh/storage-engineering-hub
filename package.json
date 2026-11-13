@@ -6,7 +6,7 @@
   "description": "Independent storage engineering toolkit by Suresh Kumar Darisi",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "check": "node --check app.js && node --check core.js && node --check data.js",
+    "check": "node --check app.js && node --check core.js && node --check data.js && node --check pure-data.js && node --check pure-core.js && node --check pure-ui.js",
     "dev": "python3 -m http.server 3000"
   }
 }

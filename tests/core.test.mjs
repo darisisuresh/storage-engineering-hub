@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {normalizeWwn,raidCapacity,throughput,transferHours,generateZoning,fillTemplate} from '../core.js';
-import {COMMANDS,PLAYBOOKS,UPGRADES} from '../data.js';
+import {COMMANDS,PLAYBOOKS,UPGRADES,VENDORS} from '../data.js';
 const zone={host:'app01',array:'storage01',vendor:'cisco',mode:'sist',A:{host:'2100000000000001',targets:'5000000000000001\n5000000000000003',cfg:'PROD_A',vsan:'10'},B:{host:'2100000000000002',targets:'5000000000000002',cfg:'PROD_B',vsan:'20'}};
 test('WWPN normalization accepts valid separators and refuses silent character removal',()=>{
  assert.equal(normalizeWwn('0x2100.0000.0000.0001'),'21:00:00:00:00:00:00:01');
@@ -44,6 +44,6 @@ test('template filling preserves unresolved tokens and inserts values literally'
  assert.equal(fillTemplate('show {{name}} {{other}}',{name:'$&'}),'show $& {{other}}');
 });
 test('catalog IDs and playbook links are consistent',()=>{
- assert.equal(COMMANDS.length,32);assert.equal(new Set(COMMANDS.map(c=>c.id)).size,COMMANDS.length);
+ assert.equal(Object.keys(VENDORS).length,5);assert.ok(COMMANDS.some(c=>c.vendor==='pure'));assert.equal(new Set(COMMANDS.map(c=>c.id)).size,COMMANDS.length);
  for(const p of [...PLAYBOOKS,...UPGRADES])for(const id of p.commands)assert.ok(COMMANDS.some(c=>c.id===id),id);
 });

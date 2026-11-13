@@ -10,12 +10,13 @@ This repository contains an independent implementation with a fresh Git history.
 
 | Workspace | Capabilities |
 | --- | --- |
-| Vendor commands | 32 read-only inspection entries for NetApp ONTAP, Dell PowerMax, Cisco MDS and Brocade FOS; editable parameters; search; saved favorites |
+| Vendor commands | 67 read-only inspection entries for NetApp ONTAP, Dell PowerMax, Pure Storage FlashArray, Cisco MDS and Brocade FOS; editable parameters; search; saved favorites |
+| Pure Storage | 66 command examples across 13 families; 66 task answers; 10 current-family/historical-catalog entries; provisioning and protection guidance; five validated CLI builders; local assistant and prompt composition; Remote Assist lifecycle |
 | SAN zoning | Independent Fabric A/B inputs; Cisco or Brocade syntax; SIST and SIMT; multiple targets; strict WWPN/name/VSAN validation; rollback; text ticket export |
-| CLI equivalents | Five curated operational task comparisons across four vendor families |
+| CLI equivalents | Five curated operational task comparisons across five vendor families |
 | Calculators | RAID 5/6/10 with spares; TB/TiB distinction; IOPS to MB/s and MiB/s; data transfer time; WWPN normalization |
 | Incident playbooks | Four evidence-oriented checklists; locally saved progress and notes; handoff downloads |
-| Upgrade planning | Four platform readiness checklists; current/target release and ticket fields; local progress; export |
+| Upgrade planning | Five platform readiness checklists; current/target release and ticket fields; local progress; export |
 | Automation | Original Python, Ansible and shell examples for read-only inventory or local validation; copy and file download |
 | AI prompt composer | Four structured prompt types that incorporate custom context; copy and download; no model connection or simulated diagnosis |
 | Application | Global command search (Ctrl/Cmd+K); light/dark themes; responsive navigation; keyboard focus states |
@@ -55,7 +56,17 @@ node tests/browser.cjs
 
 ## Deployment
 
-The GitHub Actions workflow checks syntax, runs logic tests, packages exactly six application files and publishes GitHub Pages. It has a manual dispatch trigger as well as a push trigger for `main`.
+The GitHub Actions workflow checks syntax, runs logic tests, packages exactly nine application files and publishes GitHub Pages. It has a manual dispatch trigger as well as a push trigger for `main`.
+
+## Pure Storage workspace
+
+Open [Pure Storage](https://darisisuresh.github.io/storage-engineering-hub/#pure/overview). This independently written extension covers the topic areas in the [requested reference](https://www.rajeshvu.com/storage/pure/), with an in-app coverage map linking each source topic to its replacement. It does not reproduce the original articles, website code, images or command list wholesale.
+
+The command desk includes 35 read-only Pure entries; the dedicated Pure reference additionally labels change examples. Builders support multiple FC/iSCSI/NVMe hosts, optional new host groups, volume sequences, private/shared connections, optional bounded LUN sequences, disconnection, and destruction drafts. All builders run locally and export text. Destruction drafts omit eradication and treat recovery as policy-dependent. No infrastructure action is performed. Builder inputs are not persisted.
+
+Model pages separate historical identifiers from family guidance and intentionally omit stale performance/capacity figures. The local assistant performs catalog matching, not model inference. Prompt composition does not contact a provider. Read the exact installed release documentation before using an example.
+
+Run additional checks with `node tests/pure-browser.cjs` in the same Playwright environment described above.
 
 ## Browser data
 
@@ -65,6 +76,9 @@ Favorites, command parameters, zoning inputs, theme, incident notes, upgrade fie
 
 Syntax review uses vendor documentation, linked in the app:
 
+- [Pure Storage / Everpure documentation portal](https://support.everpuredata.com/)
+- [FlashArray family datasheet](https://www.everpuredata.com/content/dam/pdf/en/datasheets/ds-everpure-flasharray-family.pdf)
+- [Official FlashArray provisioning example](https://support.everpuredata.com/r/proxmox/proxmox-pbs-quickstart)
 - [NetApp ONTAP command reference](https://docs.netapp.com/us-en/ontap-cli/)
 - [NetApp ONTAP REST API](https://docs.netapp.com/us-en/ontap-restapi/)
 - [Cisco MDS command reference](https://www.cisco.com/c/en/us/td/docs/dcn/mds9000/sw/9x/command/cisco-mds-9000-nx-os-command-reference-guide-9x/show_commands.html)
