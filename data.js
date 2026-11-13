@@ -1,5 +1,7 @@
+import {HPE_COMMANDS,HPE_DOCS} from './hpe-data.js';
 import {PURE_COMMANDS, PURE_DOCS} from './pure-data.js';
 export const VENDORS = {
+  hpe:{name:'HPE Storage',short:'HPE',note:'Block, file, object & data protection',color:'#009b87',source:HPE_DOCS.portfolio},
   pure: { name: 'Pure Storage', short: 'Purity', note: 'FlashArray, hosts & protection', color: '#cf652a', source: PURE_DOCS.portal },
   netapp: { name: 'NetApp ONTAP', short: 'ONTAP', note: 'Volumes, LUNs & replication', color: '#1d6951', source: 'https://docs.netapp.com/us-en/ontap-cli/' },
   powermax: { name: 'Dell PowerMax', short: 'PowerMax', note: 'Arrays, devices & masking', color: '#855c21', source: 'https://www.dell.com/support/manuals/en-us/solutions-enabler/' },
@@ -8,6 +10,7 @@ export const VENDORS = {
 };
 const c = (vendor, id, title, category, syntax, description, values = {}) => ({ vendor, id, title, category, syntax, description, values });
 export const COMMANDS = [
+  ...HPE_COMMANDS,
   ...PURE_COMMANDS.filter(c=>c.effect==='Read-only'),
   c('netapp','nt-health','Cluster health','Health','cluster show','Inspect cluster membership and node health.'),
   c('netapp','nt-ha','HA partner readiness','Health','storage failover show','Check partner visibility and takeover readiness.'),
@@ -183,6 +186,8 @@ export const PROMPTS = [
  {id:'automation',title:'Automation code review',role:'Storage automation reviewer',instructions:'Review this automation for input validation, credential handling, TLS verification, pagination, timeouts, idempotency and rollback. Explain which actions read state and which change it. Do not invent successful execution results.'},
 ];
 export const SOURCES = [
+ ['HPE storage developer portfolio',HPE_DOCS.portfolio],
+ ['HPE interoperability (SPOCK)',HPE_DOCS.spock],
  ['Pure Storage / Everpure documentation', PURE_DOCS.portal],
  ['FlashArray family datasheet', PURE_DOCS.family],
  ['Requested Pure topic reference', PURE_DOCS.reference],

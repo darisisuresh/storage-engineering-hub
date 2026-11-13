@@ -44,6 +44,6 @@ test('template filling preserves unresolved tokens and inserts values literally'
  assert.equal(fillTemplate('show {{name}} {{other}}',{name:'$&'}),'show $& {{other}}');
 });
 test('catalog IDs and playbook links are consistent',()=>{
- assert.equal(Object.keys(VENDORS).length,5);assert.ok(COMMANDS.some(c=>c.vendor==='pure'));assert.equal(new Set(COMMANDS.map(c=>c.id)).size,COMMANDS.length);
+ assert.equal(Object.keys(VENDORS).length,6);assert.ok(COMMANDS.some(c=>c.vendor==='pure'));assert.equal(new Set(COMMANDS.map(c=>c.id)).size,COMMANDS.length);
  for(const p of [...PLAYBOOKS,...UPGRADES])for(const id of p.commands)assert.ok(COMMANDS.some(c=>c.id===id),id);
 });

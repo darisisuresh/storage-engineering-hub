@@ -37,3 +37,11 @@ The shared shell and all ten routes were restyled with a forest sidebar, native 
 - 21 Node tests passed, including geometry/unit precision, upward rounding, bounded inputs, classic NAA decode/unsupported layouts, batch identifier validation and numeric device-list transformations.
 - Popular browser suite passed 56 responsive route checks, all four new utilities, export, search/filtering, task banks, and internal navigation. Existing main and Pure browser suites also passed.
 - Desktop, mobile and dark screenshots inspected. Source references distinguish the reviewed collection from primary Dell technical material. No equipment actions were performed.
+
+## HPE extension — 2026-11-13
+
+- Six vendor workspaces and 91 shared inspection entries. HPE adds ten product-family summaries and 24 explicitly scoped command examples.
+- Syntax checks and all 24 Node tests passed; HPE tests cover architecture filters, CLI separation and product-specific planning output.
+- HPE Chromium checks passed: catalog filters, eight commands per dialect, shared command desk, worksheet export, stale output invalidation, injection escaping and 32 responsive route checks (320/390/768/1440px).
+- Existing main, Pure and Popular Chromium suites passed (30, 64 and 56 responsive route checks respectively).
+- Official primary references and scope limits recorded in HPE_COVERAGE.md. No live equipment verification or Safari/Firefox testing.

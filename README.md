@@ -11,7 +11,8 @@ This repository contains an independent implementation with a fresh Git history.
 | Workspace | Capabilities |
 | --- | --- |
 | Popular articles & utilities | 13 featured topics with search/type/vendor filters; original SRDF and PowerMax allocation/deallocation guides; task banks; cylinder converter, classic SYMDEV decoder, batch WWN formatting, device-list formatting, and links to existing Pure tools |
-| Vendor commands | 67 read-only inspection entries for NetApp ONTAP, Dell PowerMax, Pure Storage FlashArray, Cisco MDS and Brocade FOS; editable parameters; search; saved favorites |
+| Vendor commands | 91 read-only inspection entries for NetApp ONTAP, Dell PowerMax, Pure Storage FlashArray, HPE Storage, Cisco MDS and Brocade FOS; editable parameters; search; saved favorites |
+| HPE Storage | Ten product families; workload/data-type explorer; 24 inspection examples across three CLI dialects; family-specific worksheet export; protection, upgrade and API/CSI guidance |
 | Pure Storage | 66 command examples across 13 families; 66 task answers; 10 current-family/historical-catalog entries; provisioning and protection guidance; five validated CLI builders; local assistant and prompt composition; Remote Assist lifecycle |
 | SAN zoning | Independent Fabric A/B inputs; Cisco or Brocade syntax; SIST and SIMT; multiple targets; strict WWPN/name/VSAN validation; rollback; text ticket export |
 | CLI equivalents | Five curated operational task comparisons across five vendor families |
@@ -57,7 +58,7 @@ node tests/browser.cjs
 
 ## Deployment
 
-The GitHub Actions workflow checks syntax, runs logic tests, packages exactly eleven application files and publishes GitHub Pages. It has a manual dispatch trigger as well as a push trigger for `main`.
+The GitHub Actions workflow checks syntax, runs logic tests, packages exactly thirteen application files and publishes GitHub Pages. It has a manual dispatch trigger as well as a push trigger for `main`.
 
 ## Pure Storage workspace
 
@@ -96,3 +97,7 @@ Syntax review uses vendor documentation, linked in the app:
 - [Broadcom Fabric OS 8.2.x command reference](https://docs.broadcom.com/doc/FOS-82x-Command-RM) (version-specific)
 
 Copyright © 2026 Suresh Kumar Darisi. All rights reserved.
+
+## HPE Storage workspace
+
+Open [HPE Storage](https://darisisuresh.github.io/storage-engineering-hub/#hpe/overview). See [HPE_COVERAGE.md](HPE_COVERAGE.md) for included families, CLI baselines, references and limits. `node tests/hpe-browser.cjs` verifies explorer filters, family-scoped commands, worksheet generation/export, safe rendering and responsive layouts.
