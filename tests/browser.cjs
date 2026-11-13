@@ -66,7 +66,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
      assert.equal(overflow,false,`${route}: horizontal overflow at ${width}`);
    }
  }
- await page.setViewportSize({width:390,height:844});await page.goto(base+'#home');await page.locator('#menu').click();assert.equal(await page.locator('#menu').getAttribute('aria-expanded'),'true');await page.locator('#navigation a[href="#zoning"]').click();await page.waitForFunction(()=>document.querySelector('#menu').getAttribute('aria-expanded')==='false');assert.equal(await page.locator('#menu').getAttribute('aria-expanded'),'false');await page.goto(base+'#home');
+ await page.setViewportSize({width:390,height:844});await page.goto(base+'#home');await page.locator('#menu').click();assert.equal(await page.locator('#menu').getAttribute('aria-expanded'),'true');await page.locator('#navigation a[href="#zoning"]').click();await page.waitForFunction(()=>document.querySelector('#menu').getAttribute('aria-expanded')==='false');assert.equal(await page.locator('#menu').getAttribute('aria-expanded'),'false');await page.goto(base+'#home');await page.waitForFunction(()=>document.querySelector('#sidebar').getBoundingClientRect().right<=0);
  await page.screenshot({path:path.join(os.tmpdir(),'storage-hub-mobile.png'),fullPage:true});
  assert.deepEqual(errors,[]);
  await browser.close();console.log('Browser checks passed: search, injection escaping, saved parameters, favorites, zoning validation and downloads, calculators, checklists, upgrades, translation, automation, prompt composition, themes, and 30 responsive route checks.');
