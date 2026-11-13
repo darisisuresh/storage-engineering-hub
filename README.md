@@ -10,6 +10,7 @@ This repository contains an independent implementation with a fresh Git history.
 
 | Workspace | Capabilities |
 | --- | --- |
+| Popular articles & utilities | 13 featured topics with search/type/vendor filters; original SRDF and PowerMax allocation/deallocation guides; task banks; cylinder converter, classic SYMDEV decoder, batch WWN formatting, device-list formatting, and links to existing Pure tools |
 | Vendor commands | 67 read-only inspection entries for NetApp ONTAP, Dell PowerMax, Pure Storage FlashArray, Cisco MDS and Brocade FOS; editable parameters; search; saved favorites |
 | Pure Storage | 66 command examples across 13 families; 66 task answers; 10 current-family/historical-catalog entries; provisioning and protection guidance; five validated CLI builders; local assistant and prompt composition; Remote Assist lifecycle |
 | SAN zoning | Independent Fabric A/B inputs; Cisco or Brocade syntax; SIST and SIMT; multiple targets; strict WWPN/name/VSAN validation; rollback; text ticket export |
@@ -56,7 +57,7 @@ node tests/browser.cjs
 
 ## Deployment
 
-The GitHub Actions workflow checks syntax, runs logic tests, packages exactly nine application files and publishes GitHub Pages. It has a manual dispatch trigger as well as a push trigger for `main`.
+The GitHub Actions workflow checks syntax, runs logic tests, packages exactly eleven application files and publishes GitHub Pages. It has a manual dispatch trigger as well as a push trigger for `main`.
 
 ## Pure Storage workspace
 
@@ -67,6 +68,14 @@ The command desk includes 35 read-only Pure entries; the dedicated Pure referenc
 Model pages separate historical identifiers from family guidance and intentionally omit stale performance/capacity figures. The local assistant performs catalog matching, not model inference. Prompt composition does not contact a provider. Read the exact installed release documentation before using an example.
 
 Run additional checks with `node tests/pure-browser.cjs` in the same Playwright environment described above.
+
+## Popular Articles & Utilities
+
+The [Popular tab](https://darisisuresh.github.io/storage-engineering-hub/#popular) covers the 13 items featured on the reviewed [reference homepage](https://www.rajeshvu.com/), with original local explanations and links to the original references. Its question banks intentionally describe the local inspection catalog rather than copying the reference’s complete question collections.
+
+Four newly written utilities run locally: explicit-geometry cylinders/tracks/byte conversion with GB vs GiB and separate rounding; classic Symmetrix NAA decoding with unsupported-layout rejection; bulk WWN separator formatting; and hexadecimal device-list formatting with optional deduplication/sorting. Pure volume creation reuses the existing builder. The classic decoder must not be used to infer the current owner of migrated, non-native or unsupported NAA layouts. Inputs are not persisted.
+
+Additional browser checks: `node tests/popular-browser.cjs`.
 
 ## Browser data
 

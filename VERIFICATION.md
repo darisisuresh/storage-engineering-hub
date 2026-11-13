@@ -29,3 +29,11 @@ The shared shell and all ten routes were restyled with a forest sidebar, native 
 - Existing browser regression suite passed. Pure-specific browser suite passed 64 responsive route checks plus all five builders, downloads, search, question bank, models, prompt escaping and integration.
 - Builder inputs and prompt text are not persisted; stale generated output is cleared on edits.
 - New Shell inventory example syntax checked; no equipment execution.
+
+## Popular Articles & Utilities — 2026-11-13
+
+- New left-navigation tab covers all 13 topics featured on the reviewed homepage: 8 article/guide entries and 5 utilities.
+- Original SRDF, allocation and deallocation guidance; local SYMCLI/Cisco task banks; native utility implementations and existing Pure workspace links.
+- 21 Node tests passed, including geometry/unit precision, upward rounding, bounded inputs, classic NAA decode/unsupported layouts, batch identifier validation and numeric device-list transformations.
+- Popular browser suite passed 56 responsive route checks, all four new utilities, export, search/filtering, task banks, and internal navigation. Existing main and Pure browser suites also passed.
+- Desktop, mobile and dark screenshots inspected. Source references distinguish the reviewed collection from primary Dell technical material. No equipment actions were performed.

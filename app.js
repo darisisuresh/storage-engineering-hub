@@ -1,3 +1,4 @@
+import {POPULAR_ITEMS,popularPage,afterPopularRender,initPopular} from './popular.js';
 import {purePage,afterPureRender,initPure} from './pure-ui.js';
 import {PURE_TOPICS, PURE_BUILDERS} from './pure-data.js';
 import { VENDORS, COMMANDS, TRANSLATIONS, PLAYBOOKS, UPGRADES, AUTOMATION, PROMPTS, SOURCES } from './data.js';
@@ -31,7 +32,7 @@ const ICONS = {
  menu:'<path d="M4 6h16M4 12h16M4 18h16"/>'
 };
 function icon(name, extra = '') { return `<svg class="icon ${extra}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ICONS.terminal}</svg>`; }
-const NAV_ICONS = {pure:'database',home:'home',commands:'terminal',zoning:'network',translator:'transfer',calculators:'calculator',incidents:'activity',upgrades:'upgrade',automation:'code',prompts:'spark',about:'info'};
+const NAV_ICONS = {popular:'file',pure:'database',home:'home',commands:'terminal',zoning:'network',translator:'transfer',calculators:'calculator',incidents:'activity',upgrades:'upgrade',automation:'code',prompts:'spark',about:'info'};
 const storageKey = 'seh-v1';
 let state;
 try { state = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch { state = {}; }
@@ -44,7 +45,7 @@ let zoningOutput = null;
 let generatedPrompt = '';
 let toastTimer;
 const NAV = [
- ['home','Overview','◫'],['pure','Pure Storage','database'],['commands','Vendor commands','⌘'],['zoning','SAN zoning','⋈'],['translator','CLI equivalents','⇄'],['calculators','Calculators','＋'],['incidents','Incident playbooks','△'],['upgrades','Upgrade planning','↑'],['automation','Automation library','⌁'],['prompts','AI prompt composer','✧'],['about','About & sources','ⓘ'],
+ ['home','Overview','◫'],['popular','Popular articles & utilities','file'],['pure','Pure Storage','database'],['commands','Vendor commands','⌘'],['zoning','SAN zoning','⋈'],['translator','CLI equivalents','⇄'],['calculators','Calculators','＋'],['incidents','Incident playbooks','△'],['upgrades','Upgrade planning','↑'],['automation','Automation library','⌁'],['prompts','AI prompt composer','✧'],['about','About & sources','ⓘ'],
 ];
 function save() {
   try { localStorage.setItem(storageKey, JSON.stringify(state)); return true; }
@@ -196,11 +197,12 @@ function render() {
   document.title = `${NAV.find(n=>n[0]===current)[1]} · Storage Engineering Hub`;
   $('#breadcrumb').textContent = NAV.find(n=>n[0]===current)[1];
   $('#navigation').innerHTML = NAV.map(([key,label])=>`<a href="#${key}" class="${current===key?'active':''}" ${current===key?'aria-current="page"':''}><span class="nav-icon">${icon(NAV_ICONS[key])}</span><span>${label}</span>${key==='commands'?`<span class="nav-count">${COMMANDS.length}</span>`:''}</a>`).join('');
-  const views = {home:overview,pure:()=>purePage(currentId,parts[2],{escape,codeBlock,field,icon,download}),commands:commandsPage,zoning:zoningPage,translator:translatorPage,calculators:calculatorsPage,incidents:incidentsPage,upgrades:upgradesPage,automation:automationPage,prompts:promptsPage,about:aboutPage};
+  const views = {home:overview,popular:()=>popularPage(currentId,{escape,codeBlock,field,icon,download,pageTitle}),pure:()=>purePage(currentId,parts[2],{escape,codeBlock,field,icon,download}),commands:commandsPage,zoning:zoningPage,translator:translatorPage,calculators:calculatorsPage,incidents:incidentsPage,upgrades:upgradesPage,automation:automationPage,prompts:promptsPage,about:aboutPage};
   $('#main').dataset.page = current;
   $('#main').innerHTML = views[current]();
   if (current==='commands') updateCommands();
   if (current==='pure') afterPureRender();
+  if (current==='popular') afterPopularRender();
   if (current==='zoning') { zoningOutput=null; refreshZoningVendor(); }
   if (current==='prompts') generatedPrompt='';
   closeMenu();
@@ -210,6 +212,7 @@ function render() {
 window.addEventListener('hashchange',()=>{ render(); if(current!=='commands'||!location.hash.split('/')[2])window.scrollTo(0,0); $('#main').focus({preventScroll:true}); });
 render();
 initPure({escape,codeBlock,field,icon,download});
+initPopular({escape,codeBlock,field,icon,download,pageTitle});
 
 // All dynamic values are rendered through textContent or the escaping helper.
 document.addEventListener('input', e => {
@@ -302,7 +305,8 @@ function search(){
   const tools=NAV.filter(([key,label])=>q.split(/\s+/).every(term=>`${key} ${label}`.toLowerCase().includes(term))).map(([key,label])=>({title:label,label:'TOOL',href:`#${key}`}));
   const cmds=COMMANDS.filter(c=>q.split(/\s+/).every(term=>`${c.title} ${c.syntax} ${c.description} ${VENDORS[c.vendor].name}`.toLowerCase().includes(term))).map(c=>({title:c.title,label:VENDORS[c.vendor].short,href:`#commands/${c.vendor}/${c.id}`}));
   const pureTopics=[...PURE_TOPICS,...PURE_BUILDERS.map(([id,title,note])=>['builders/'+id,title,note])].filter(([id,title,note])=>q.split(/\s+/).every(term=>`pure storage ${id} ${title} ${note}`.toLowerCase().includes(term))).map(([id,title])=>({title:'Pure / '+title,label:'PURE TOPIC',href:`#pure/${id}`}));
-  const entries=[...tools,...pureTopics,...cmds].slice(0,24);
+  const popularItems=POPULAR_ITEMS.filter(p=>q.split(/\s+/).every(term=>`${p.title} ${p.note} ${p.vendor} ${p.kind}`.toLowerCase().includes(term))).map(p=>({title:p.title,label:p.kind.toUpperCase(),href:`#popular/${p.id}`}));
+  const entries=[...tools,...popularItems,...pureTopics,...cmds].slice(0,24);
   $('#search-results').innerHTML=entries.length?entries.map(r=>`<a href="${r.href}"><span>${escape(r.title)}</span><small>${escape(r.label)}</small></a>`).join(''):'<div class="empty">No results. Try a vendor name or operational task.</div>';
 }
 $('#search-open').addEventListener('click',openSearch);$('#search-close').addEventListener('click',()=>dialog.close());$('#global-search').addEventListener('input',search);
