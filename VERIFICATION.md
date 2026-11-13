@@ -45,3 +45,10 @@ The shared shell and all ten routes were restyled with a forest sidebar, native 
 - HPE Chromium checks passed: catalog filters, eight commands per dialect, shared command desk, worksheet export, stale output invalidation, injection escaping and 32 responsive route checks (320/390/768/1440px).
 - Existing main, Pure and Popular Chromium suites passed (30, 64 and 56 responsive route checks respectively).
 - Official primary references and scope limits recorded in HPE_COVERAGE.md. No live equipment verification or Safari/Firefox testing.
+
+## Storage Evolution — 2026-11-13
+
+- 64 dated milestones, 120 model/generation labels, 64 primary references attached to launch entries plus MSA research-gap documentation. Family dates and regional announcements are explicitly scoped.
+- All 29 Node tests passed. Storage Evolution Chromium checks passed: filters, evidence, reload/deep links, CSV download, invalid ranges, escaping, matrix gaps, model index, global search, light/dark capture and 16 responsive view combinations.
+- Existing main, HPE, Pure and Popular browser suites passed (30, 32, 64 and 56 responsive route checks respectively).
+- Source-linked coverage and open research gaps are recorded in EVOLUTION_COVERAGE.md and in the page. Dates are a static research snapshot; not every historical SKU is included.

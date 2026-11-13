@@ -28,7 +28,7 @@ jobs:
       - name: Package static application
         run: |
           mkdir -p _site
-          cp index.html styles.css app.js core.js data.js pure-data.js pure-core.js pure-ui.js popular.js popular-core.js hpe-data.js hpe-ui.js favicon.svg _site/
+          cp index.html styles.css app.js core.js data.js pure-data.js pure-core.js pure-ui.js popular.js popular-core.js hpe-data.js hpe-ui.js evolution-data.js evolution-core.js evolution-ui.js favicon.svg _site/
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

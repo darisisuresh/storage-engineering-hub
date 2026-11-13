@@ -11,6 +11,7 @@ This repository contains an independent implementation with a fresh Git history.
 | Workspace | Capabilities |
 | --- | --- |
 | Popular articles & utilities | 13 featured topics with search/type/vendor filters; original SRDF and PowerMax allocation/deallocation guides; task banks; cylinder converter, classic SYMDEV decoder, batch WWN formatting, device-list formatting, and links to existing Pure tools |
+| Storage Evolution | 64 dated milestones and 120 model/generation labels (1995–2026) for Dell/EMC, NetApp, Pure and HPE/HP; timeline, yearly comparison, model index, source notes, filters, bookmarks and CSV evidence export |
 | Vendor commands | 91 read-only inspection entries for NetApp ONTAP, Dell PowerMax, Pure Storage FlashArray, HPE Storage, Cisco MDS and Brocade FOS; editable parameters; search; saved favorites |
 | HPE Storage | Ten product families; workload/data-type explorer; 24 inspection examples across three CLI dialects; family-specific worksheet export; protection, upgrade and API/CSI guidance |
 | Pure Storage | 66 command examples across 13 families; 66 task answers; 10 current-family/historical-catalog entries; provisioning and protection guidance; five validated CLI builders; local assistant and prompt composition; Remote Assist lifecycle |
@@ -58,7 +59,7 @@ node tests/browser.cjs
 
 ## Deployment
 
-The GitHub Actions workflow checks syntax, runs logic tests, packages exactly thirteen application files and publishes GitHub Pages. It has a manual dispatch trigger as well as a push trigger for `main`.
+The GitHub Actions workflow checks syntax, runs logic tests, packages exactly sixteen application files and publishes GitHub Pages. It has a manual dispatch trigger as well as a push trigger for `main`.
 
 ## Pure Storage workspace
 
@@ -101,3 +102,7 @@ Copyright © 2026 Suresh Kumar Darisi. All rights reserved.
 ## HPE Storage workspace
 
 Open [HPE Storage](https://darisisuresh.github.io/storage-engineering-hub/#hpe/overview). See [HPE_COVERAGE.md](HPE_COVERAGE.md) for included families, CLI baselines, references and limits. `node tests/hpe-browser.cjs` verifies explorer filters, family-scoped commands, worksheet generation/export, safe rendering and responsive layouts.
+
+## Storage Evolution
+
+Open [Storage Evolution](https://darisisuresh.github.io/storage-engineering-hub/#evolution). The curated research distinguishes announcements, shipping, scheduled availability and documentation milestones. It preserves date precision and marks research gaps. See [EVOLUTION_COVERAGE.md](EVOLUTION_COVERAGE.md) for the full source-linked catalog and scope. Run `node tests/evolution-browser.cjs` for the timeline integration suite.
