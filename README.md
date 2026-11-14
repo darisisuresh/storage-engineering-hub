@@ -106,3 +106,7 @@ Open [HPE Storage](https://darisisuresh.github.io/storage-engineering-hub/#hpe/o
 ## Storage Evolution
 
 Open [Storage Evolution](https://darisisuresh.github.io/storage-engineering-hub/#evolution). The curated research distinguishes announcements, shipping, scheduled availability and documentation milestones. It preserves date precision and marks research gaps. See [EVOLUTION_COVERAGE.md](EVOLUTION_COVERAGE.md) for the full source-linked catalog and scope. Run `node tests/evolution-browser.cjs` for the timeline integration suite.
+
+## Author bio
+
+The [About, bio & sources](https://darisisuresh.github.io/storage-engineering-hub/#about) page includes Suresh Kumar Darisi’s short professional bio and public profile links. Role, focus areas and professional memberships were taken from the public GitHub profile reviewed on 2026-11-14.
