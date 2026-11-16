@@ -315,3 +315,5 @@ aside { overflow-y: auto; scrollbar-width: thin; scrollbar-color: #456854 #102b2
 
 .evidence-panel{display:grid;gap:14px}.evidence-panel h3{font-size:18px}.evidence-panel .check-field{align-items:flex-start;line-height:1.7}.evidence-panel .check-field input{flex:0 0 16px;margin-top:4px}.evidence-panel textarea{font-size:12px}#zoning-rollback-form{margin-top:26px}
 @media(max-width:760px){.evidence-panel textarea{font-size:16px}}
+
+.command-metadata{margin-top:1rem;border-top:1px solid var(--line);padding-top:.75rem;overflow-wrap:anywhere}.command-metadata dl{font-size:.85rem}.command-metadata dt{font-weight:700;margin-top:.65rem}.command-metadata dd{margin-left:0}

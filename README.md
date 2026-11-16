@@ -45,21 +45,19 @@ npm test
 
 There is no dependency installation requirement for those checks. Tests cover WWPN validation, RAID calculations and edge cases, units, Cisco/Brocade zoning and rollback, input rejection, and catalog consistency.
 
-### Optional browser integration check
-
-With the local server running, install Playwright in your preferred test environment and make Chromium available:
+### Browser integration checks
 
 ```sh
-npm install --no-save playwright
-npx playwright install chromium
-node tests/browser.cjs
+npm ci
+npx playwright install --with-deps chromium
+npm run test:browser
 ```
 
-`PLAYWRIGHT_MODULE` may point to an existing Playwright installation. `TEST_URL` defaults to http://127.0.0.1:3000/. Browser checks cover all major workflows, exports, persistence and responsive route rendering. Screenshots are written to the OS temporary directory.
+The runner packages the static application, starts a temporary local server, runs all eight suites sequentially and fails on any suite failure. CI deploys that exact tested artifact. `TEST_URL` optionally targets an existing deployment; `BROWSER_SUITES` selects named suites for focused verification. Failure screenshots are retained in ignored `test-artifacts/`. Playwright is a pinned development dependency; the website has no runtime dependencies.
 
 ## Deployment
 
-The GitHub Actions workflow checks syntax, runs logic tests, packages exactly twenty-one application files and publishes GitHub Pages. It has a manual dispatch trigger as well as a push trigger for `main`.
+The GitHub Actions workflow checks syntax, release metadata, all 122 catalog commands, unit tests and all eight browser suites on pull requests and main pushes. Pages deployment depends on successful validation and publishes the same 22 packaged application files. PR jobs have read-only permissions and cannot deploy. A manual dispatch is also available. Repository branch-protection requirements are managed separately.
 
 ## Pure Storage workspace
 

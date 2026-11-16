@@ -2,6 +2,21 @@
 
 Versioned releases record completed changes, their validation and remaining limits. No earlier tag is rewritten.
 
+## [1.3.0] — 2026-11-15
+
+### Fixed
+- P1 browser validation now gates Pages deployment and runs on pull requests, including both P0 adversarial browser suites.
+- RAID results explicitly identify theoretical capacity and break out dedicated spares versus parity/mirrors, with units and vendor exclusions.
+- Every catalog command carries product, risk, official reference and explicit unknown release/privilege/review metadata. Selected releases remain visibly unverified; no lab testing is implied.
+
+### Added
+- Pinned Playwright development dependency, reproducible static packaging, browser runner and catalog validation.
+- Release target fields in the shared, Pure and HPE command references and regression coverage for P1 behavior.
+
+### Updated
+- CI uses the exact browser-tested artifact for deployment. PR checks have read-only repository permissions.
+- Validation and remaining limits are recorded in docs/P1_REVIEW.md. These checks do not certify vendor equipment or command compatibility.
+
 ## [1.2.0] — 2026-11-15
 
 ### Fixed

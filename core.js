@@ -6,11 +6,12 @@ export function normalizeWwn(value) {
 }
 export function raidCapacity(count, tb, level, spares = 0) {
   const active = count - spares;
-  if (!Number.isInteger(count) || !Number.isInteger(spares) || spares < 0 || !Number.isFinite(tb) || tb <= 0) throw new Error('Use whole drive counts and a positive drive capacity.');
+  if (!Number.isSafeInteger(count) || !Number.isSafeInteger(spares) || spares < 0 || !Number.isFinite(tb) || tb <= 0) throw new Error('Use whole drive counts and a positive drive capacity.');
   if (!['5', '6', '10'].includes(String(level))) throw new Error('Choose RAID 5, 6, or 10.');
   if (active < (String(level) === '5' ? 3 : 4) || (String(level) === '10' && active % 2)) throw new Error('RAID 5 needs 3 active drives; RAID 6 needs 4; RAID 10 needs an even count of at least 4.');
   const usable = tb * (String(level) === '10' ? active / 2 : active - (String(level) === '6' ? 2 : 1));
-  return { raw: count * tb, usable, tib: usable * 1e12 / 2 ** 40, overhead: count * tb - usable };
+  if (![count*tb,usable,usable*1e12].every(Number.isFinite)) throw new Error('Capacity exceeds the supported numeric range.');
+  return { raw: count * tb, usable, tib: usable * 1e12 / 2 ** 40, overhead: count * tb - usable, spareCapacity: spares*tb, protectionCapacity: active*tb-usable };
 }
 export function throughput(iops, kib) {
   if (!Number.isFinite(iops) || !Number.isFinite(kib) || iops < 0 || kib <= 0) throw new Error('Enter nonnegative IOPS and a positive block size.');

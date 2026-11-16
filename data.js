@@ -1,3 +1,4 @@
+import {withCommandMetadata} from './command-metadata.js';
 import {HPE_COMMANDS,HPE_DOCS} from './hpe-data.js';
 import {PURE_COMMANDS, PURE_DOCS} from './pure-data.js';
 export const VENDORS = {
@@ -8,7 +9,7 @@ export const VENDORS = {
   cisco: { name: 'Cisco MDS', short: 'MDS', note: 'VSANs, logins & zoning', color: '#2b62a0', source: 'https://www.cisco.com/c/en/us/td/docs/dcn/mds9000/sw/9x/command/cisco-mds-9000-nx-os-command-reference-guide-9x/show_commands.html' },
   brocade: { name: 'Brocade Fabric OS', short: 'FOS', note: 'Fabrics, ports & optics', color: '#84559c', source: 'https://docs.broadcom.com/doc/FOS-82x-Command-RM' },
 };
-const c = (vendor, id, title, category, syntax, description, values = {}) => ({ vendor, id, title, category, syntax, description, values });
+const c = (vendor, id, title, category, syntax, description, values = {}) => withCommandMetadata({ vendor, id, title, category, syntax, description, values });
 export const COMMANDS = [
   ...HPE_COMMANDS,
   ...PURE_COMMANDS.filter(c=>c.effect==='Read-only'),

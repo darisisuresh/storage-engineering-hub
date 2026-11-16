@@ -33,7 +33,7 @@ Passing local validation does not prove the imported state is truthful, current 
 - tests/core.test.mjs: existing zoning and calculation regression checks now use explicit captured-state fixtures.
 - tests/zoning-safety-browser.cjs: UI gating, real file import, reviewer invalidation, rollback state checks, exports and responsive rendering.
 
-P1/P2 requests in the review remain separate work: browser CI/PR gates, broader command metadata, RAID presentation, architectural restructuring, licensing and optional new analyzers are not claimed as fixed by this P0 release.
+P1 requests were addressed separately in v1.3.0; see [P1_REVIEW.md](P1_REVIEW.md) for browser CI/PR gates, command metadata and RAID presentation. P2 architectural restructuring, licensing and optional new analyzers are not claimed as fixed.
 
 ## P0-2 implementation (v1.2.0)
 

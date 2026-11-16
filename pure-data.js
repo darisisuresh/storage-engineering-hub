@@ -1,3 +1,4 @@
+import {withCommandMetadata} from './command-metadata.js';
 // Original task descriptions. CLI syntax is a vendor interface, not copied article prose.
 export const PURE_DOCS = {
   portal: 'https://support.everpuredata.com/',
@@ -7,7 +8,7 @@ export const PURE_DOCS = {
   reference: 'https://www.rajeshvu.com/storage/pure/',
 };
 const defaults = {host:'app01',hgroup:'app_cluster',vol:'app_data01',source:'app_data01',destination:'app_test01',size:'100G',pod:'app_pod',user:'review_user',component:'CT0',suffix:'before_change',domain:'example.internal',ntp:'ntp.example.internal',syslog:'logs.example.internal'};
-const entry=(id,family,title,syntax,description,effect='Read-only')=>({id:`pure-${id}`,vendor:'pure',family,category:family,title,syntax,description,effect,values:Object.fromEntries([...syntax.matchAll(/\{\{(\w+)\}\}/g)].map(([,key])=>[key,defaults[key]||'example']))});
+const entry=(id,family,title,syntax,description,effect='Read-only')=>withCommandMetadata({id:`pure-${id}`,vendor:'pure',family,category:family,title,syntax,description,effect,values:Object.fromEntries([...syntax.matchAll(/\{\{(\w+)\}\}/g)].map(([,key])=>[key,defaults[key]||'example']))});
 export const PURE_COMMANDS = [
  entry('array','purearray','Identify the array','purearray list','Record array identity and software before choosing a procedure.'),
  entry('controllers','purearray','Inspect controller state','purearray list --controller','Compare both controllers with the expected platform state.'),

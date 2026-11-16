@@ -1,3 +1,4 @@
+import {withCommandMetadata} from './command-metadata.js';
 // Original educational summaries; verify the installed release against linked HPE documentation.
 export const HPE_DOCS = {
  portfolio:'https://developer.hpe.com/platform/hpe-storage/home/',
@@ -25,7 +26,7 @@ export const HPE_PLATFORMS = {
  nimble:{name:'Nimble / Alletra 5000 / 6000',baseline:'NimbleOS 5.3 command reference; use the installed Array OS guide for Alletra 5000/6000.',source:HPE_DOCS.nimble,rows:[['array --list','Array inventory'],['group --info','Group identity'],['vol --list','Volume inventory'],['vol --info example_volume','Example volume detail'],['initiatorgrp --list','Initiator groups'],['pool --list','Pool inventory'],['snap --list','Snapshot inventory'],['partner --list','Replication partners']]},
  msa:{name:'MSA',baseline:'HPE MSA Gen7 migration guidance; match commands to the installed controller firmware.',source:HPE_DOCS.msa,rows:[['show configuration','Configuration baseline'],['show pool-statistics','Pool statistics'],['show disk-group-statistics','Disk-group statistics'],['show initiators','Initiator inventory'],['show host-groups','Host groups'],['show maps','Host mappings'],['show disks','Disk inventory'],['show pools','Pool inventory']]}
 };
-export const HPE_COMMANDS = Object.entries(HPE_PLATFORMS).flatMap(([platform,p])=>p.rows.map(([syntax,title],i)=>({id:`hpe-${platform}-${i}`,vendor:'hpe',platform,category:p.name,title,syntax,description:`${p.name} only. ${p.baseline} Inspection example; no commands execute in this website.`,values:{},source:p.source,effect:'Read-only'})));
+export const HPE_COMMANDS = Object.entries(HPE_PLATFORMS).flatMap(([platform,p])=>p.rows.map(([syntax,title],i)=>withCommandMetadata({id:`hpe-${platform}-${i}`,vendor:'hpe',platform,category:p.name,title,syntax,description:`${p.name} only. ${p.baseline} Inspection example; no commands execute in this website.`,values:{},source:p.source,effect:'Read-only'})));
 export const HPE_TOPICS = [['overview','Overview'],['systems','System explorer'],['commands','Platform CLI'],['planning','Provisioning plan'],['protection','Protection & recovery'],['upgrades','Upgrade readiness'],['automation','Automation & APIs'],['resources','Official resources']];
 export function filterHpeSystems(type='all',query='') { const terms=query.toLowerCase().trim().split(/\s+/);return HPE_SYSTEMS.filter(s=>(type==='all'||s.types.includes(type))&&terms.every(t=>`${s.name} ${s.fit} ${s.note}`.toLowerCase().includes(t))); }
 export function hpePlan(id,workload='Application workload') {

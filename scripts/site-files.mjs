@@ -1,0 +1,1 @@
+export const SITE_FILES = ['index.html','styles.css','app.js','core.js','data.js','pure-data.js','pure-core.js','pure-ui.js','popular.js','popular-core.js','hpe-data.js','hpe-ui.js','evolution-data.js','evolution-core.js','evolution-ui.js','safety-core.js','safety-ui.js','zoning-safety.js','release-info.js','pure-safety.js','favicon.svg','command-metadata.js'];

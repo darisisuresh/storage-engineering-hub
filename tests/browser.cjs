@@ -43,7 +43,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
  assert.match(await page.locator('#zoning-error').textContent(),/unique/);assert.equal(await page.locator('#zoning-output').textContent(),'');
  // Sizing calculations and malformed WWPN rejection.
  await page.goto(base+'#calculators');
- await page.getByRole('button',{name:'Calculate capacity'}).click();assert.match(await page.locator('#raid-result').textContent(),/24 TB usable/);
+ await page.getByRole('button',{name:'Calculate capacity'}).click();assert.match(await page.locator('#raid-result').textContent(),/24 TB theoretical after RAID/);
  await page.getByRole('button',{name:'Calculate throughput'}).click();assert.match(await page.locator('#throughput-result').textContent(),/78.125 MiB/);
  await page.getByRole('button',{name:'Estimate transfer time'}).click();assert.match(await page.locator('#transfer-result').textContent(),/3.175 hours/);
  await page.locator('[name=wwn]').fill('z2100000000000001');await page.getByRole('button',{name:'Format WWPN'}).click();assert.match(await page.locator('#wwn-result').textContent(),/exactly 16/);

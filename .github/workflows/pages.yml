@@ -2,37 +2,52 @@ name: Verify and deploy website
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
-  pages: write
-  id-token: write
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  deploy:
+  validate:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Check JavaScript
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Check JavaScript, release metadata and command catalog
         run: npm run check
-      - name: Test engineering logic
+      - name: Test engineering logic and adversarial safeguards
         run: npm test
-      - name: Package static application
-        run: |
-          mkdir -p _site
-          cp index.html styles.css app.js core.js data.js pure-data.js pure-core.js pure-ui.js popular.js popular-core.js hpe-data.js hpe-ui.js evolution-data.js evolution-core.js evolution-ui.js safety-core.js safety-ui.js zoning-safety.js release-info.js pure-safety.js favicon.svg _site/
-          touch _site/.nojekyll
-      - uses: actions/configure-pages@v5
+      - name: Package and browser-test the exact deployment artifact
+        run: npm run test:browser
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-failure-artifacts
+          path: test-artifacts
+          if-no-files-found: ignore
       - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         with:
           path: _site
+  deploy:
+    needs: validate
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
       - uses: actions/deploy-pages@v4
         id: deploy

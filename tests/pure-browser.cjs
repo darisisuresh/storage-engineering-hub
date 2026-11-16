@@ -11,7 +11,7 @@ const{chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
  await p.goto(base+'#pure/cli');assert.equal(await p.locator('.pure-command').count(),66);
  await p.locator('#pure-family').selectOption('purearray');await p.locator('#pure-effect').selectOption('read');assert.equal(await p.locator('.effect-change').count(),0);
  await p.locator('#pure-cli-filter').fill('Remote Assist');assert.match(await p.locator('#pure-cli-results').textContent(),/remoteassist --status/);
- await p.goto(base+'#pure/questions');await p.locator('#pure-question-filter').fill('recover');await p.locator('.pure-details').first().locator('summary').click();assert.ok(await p.locator('.pure-details[open] pre').isVisible());
+ await p.goto(base+'#pure/questions');await p.locator('#pure-question-filter').fill('recover');await p.locator('.pure-details').first().locator(':scope > summary').click();assert.ok(await p.locator('.pure-details[open] pre').isVisible());
  await p.goto(base+'#pure/models');await p.locator('#pure-model-filter').fill('M70');assert.equal(await p.locator('#pure-model-results article').count(),1);assert.match(await p.locator('#pure-model-results').textContent(),/Historical catalog/);
  await p.goto(base+'#pure/provisioning/cluster');assert.equal(await p.locator('.pure-steps li').count(),6);const guidePromise=p.waitForEvent('download');await p.getByRole('button',{name:'Download workflow'}).click();assert.equal((await guidePromise).suggestedFilename(),'pure-cluster-workflow.txt');
  await p.goto(base+'#pure/builders/host');await p.locator('[name=hgroup]').fill('app_cluster');await reviewPure();await p.getByRole('button',{name:'Generate CLI draft'}).click();assert.match(await p.locator('#pure-plan-output').textContent(),/purehgroup create app_cluster/);
