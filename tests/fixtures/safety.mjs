@@ -1,0 +1,6 @@
+// Synthetic test captures only. Never use these fixtures as production evidence.
+import {zoningEvidenceExample} from '../../zoning-safety.js';
+export const reviewed={ticket:'CHG12345',reviewer:'Test reviewer',reviewed:true,syntaxConfirmed:true,snapshotConfirmed:true};
+export function zoningFixture(vendor='cisco',enhanced=false){const e=zoningEvidenceExample(vendor);e.exampleOnly=false;e.capturedAt=new Date().toISOString();e.snapshotId='captured-baseline-1';e.snapshotRef='external/switch-backup-before-change.txt';for(const f of e.fabrics){f.zoningMode=vendor==='cisco'&&enhanced?'enhanced':'basic';if(f.fabric==='A')f.logins.push({wwpn:'5000000000000003',role:'target',online:true});}return e;}
+export function zoneSafety(vendor='cisco',enhanced=false){return {evidence:zoningFixture(vendor,enhanced),review:{...reviewed}};}
+export function postZoningFixture(plans){const e=zoningFixture(plans[0].vendor,plans[0].baseline.zoningMode==='enhanced');e.snapshotId='captured-after-change-2';e.capturedAt=new Date().toISOString();for(const p of plans){const f=e.fabrics.find(f=>f.fabric===p.fabric);f.aliases.push(...structuredClone(p.ownership.aliases));f.zones.push(...structuredClone(p.ownership.zones));f.configs.find(c=>c.name===p.ownership.cfg).members.push(...p.ownership.zones.map(z=>z.name));}return e;}

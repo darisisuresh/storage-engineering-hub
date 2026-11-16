@@ -1,8 +1,10 @@
+import {zoneSafety,postZoningFixture,reviewed} from './fixtures/safety.mjs';
+import {zoningRollback} from '../zoning-safety.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {normalizeWwn,raidCapacity,throughput,transferHours,generateZoning,fillTemplate} from '../core.js';
 import {COMMANDS,PLAYBOOKS,UPGRADES,VENDORS} from '../data.js';
-const zone={host:'app01',array:'storage01',vendor:'cisco',mode:'sist',A:{host:'2100000000000001',targets:'5000000000000001\n5000000000000003',cfg:'PROD_A',vsan:'10'},B:{host:'2100000000000002',targets:'5000000000000002',cfg:'PROD_B',vsan:'20'}};
+const zone={safety:zoneSafety(),host:'app01',array:'storage01',vendor:'cisco',mode:'sist',A:{host:'2100000000000001',targets:'5000000000000001\n5000000000000003',cfg:'PROD_A',vsan:'10'},B:{host:'2100000000000002',targets:'5000000000000002',cfg:'PROD_B',vsan:'20'}};
 test('WWPN normalization accepts valid separators and refuses silent character removal',()=>{
  assert.equal(normalizeWwn('0x2100.0000.0000.0001'),'21:00:00:00:00:00:00:01');
  assert.equal(normalizeWwn('21-00-00-00-00-00-00-01'),'21:00:00:00:00:00:00:01');
@@ -22,20 +24,20 @@ test('throughput and transfer use explicitly declared units',()=>{
  assert.throws(()=>throughput(-1,8));assert.throws(()=>transferHours(1,0,70));assert.throws(()=>transferHours(1,1000,101));
 });
 test('SIST creates one zone per target in independent fabrics with explicit Cisco mode exits',()=>{
- const [a,b]=generateZoning(zone);assert.equal(a.zoneCount,2);assert.equal(b.zoneCount,1);
+ const plans=generateZoning(zone);const [a,b]=plans;assert.equal(a.zoneCount,2);assert.equal(b.zoneCount,1);
  assert.match(a.apply,/vsan 10/);assert.match(b.apply,/vsan 20/);assert.doesNotMatch(a.apply,/21:00:00:00:00:00:00:02/);
- assert.match(a.apply,/exit\ndevice-alias commit/);assert.match(a.rollback,/no member Z_app01_storage01_A_1/);
+ assert.match(a.apply,/exit\ndevice-alias commit/);assert.match(zoningRollback(plans,postZoningFixture(plans),reviewed)[0].rollback,/no member Z_app01_storage01_A_1/);
  assert.doesNotMatch(a.apply,/zone commit vsan/);
 });
 test('SIMT includes all targets in one zone and enhanced Cisco commits explicitly',()=>{
- const [a]=generateZoning({...zone,mode:'simt',enhanced:true});assert.equal(a.zoneCount,1);
+ const [a]=generateZoning({...zone,mode:'simt',enhanced:true,safety:zoneSafety('cisco',true)});assert.equal(a.zoneCount,1);
  assert.match(a.apply,/member device-alias T_storage01_A_1/);assert.match(a.apply,/member device-alias T_storage01_A_2/);
- assert.match(a.apply,/zone commit vsan 10/);assert.match(a.rollback,/zone commit vsan 10/);
+ assert.match(a.apply,/zone commit vsan 10/);assert.match(a.rollback,/withheld/i);
 });
 test('Brocade rollback removes generated membership without deleting existing configuration',()=>{
- const [a]=generateZoning({...zone,vendor:'brocade'});
+ const plans=generateZoning({...zone,vendor:'brocade',safety:zoneSafety('brocade')});const a={...plans[0],rollback:zoningRollback(plans,postZoningFixture(plans),reviewed)[0].rollback};
  assert.match(a.apply,/cfgAdd "PROD_A"/);assert.match(a.rollback,/cfgRemove "PROD_A"/);assert.doesNotMatch(a.rollback,/cfgDelete|cfgClear/i);
- assert.match(a.rollback,/aliDelete "T_storage01_A_2"/);assert.match(a.rollback,/aliDelete "H_app01_A"/);
+ assert.doesNotMatch(a.rollback,/aliDelete|zoneDelete/);
 });
 test('zoning rejects command injection, duplicate WWPNs, invalid VSAN and empty targets',()=>{
  for(const modified of [{...zone,host:'bad\nend'},{...zone,A:{...zone.A,cfg:'x";cfgclear'}},{...zone,A:{...zone.A,vsan:'4094'}},{...zone,A:{...zone.A,targets:''}},{...zone,B:{...zone.B,host:zone.A.host}}])assert.throws(()=>generateZoning(modified));

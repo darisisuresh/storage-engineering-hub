@@ -1,3 +1,7 @@
+import {APP_VERSION} from './release-info.js';
+import {zoningRollback,zoningEvidenceExample,zoningTicket} from './zoning-safety.js';
+import {evidencePanel,reviewPanel,reviewValues,resetReview,initEvidenceFiles} from './safety-ui.js';
+import {requireFresh} from './safety-core.js';
 import {evolutionPage,afterEvolutionRender,initEvolution} from './evolution-ui.js';
 import {EVOLUTION_EVENTS,EVOLUTION_VENDORS} from './evolution-data.js';
 import {evolutionRoute} from './evolution-core.js';
@@ -47,6 +51,7 @@ state.params = state.params && typeof state.params === 'object' ? state.params :
 state.checks = state.checks && typeof state.checks === 'object' ? state.checks : {};
 let current = 'home', currentId = '', commandFilter = '', commandCategory = 'all', savedOnly = false;
 let zoningOutput = null;
+let zoningRollbackOutput = null;
 let generatedPrompt = '';
 let toastTimer;
 const NAV = [
@@ -85,6 +90,7 @@ function tabs(items, route, active) {
 }
 function readForm(form) { return Object.fromEntries(new FormData(form)); }
 function setTheme(theme) { document.documentElement.dataset.theme = theme; $('#theme').innerHTML = icon(theme === 'dark' ? 'sun' : 'moon'); $('#theme').setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`); }
+$('#app-version').textContent='v'+APP_VERSION;$('#app-version').href='https://github.com/darisisuresh/storage-engineering-hub/releases/tag/v'+APP_VERSION;
 setTheme(state.theme === 'dark' ? 'dark' : 'light');
 $('#menu').innerHTML = icon('menu');
 $('#search-open').insertAdjacentHTML('afterbegin', icon('search'));
@@ -133,16 +139,18 @@ function updateCommands() {
 const defaultZone = {vendor:'cisco',host:'app01',array:'array01',mode:'sist',aHost:'21:00:00:00:00:00:00:01',bHost:'21:00:00:00:00:00:00:02',aTargets:'50:00:00:00:00:00:00:01',bTargets:'50:00:00:00:00:00:00:02',aCfg:'PROD_A',bCfg:'PROD_B',aVsan:'10',bVsan:'20'};
 function zoningPage() {
   const z = {...defaultZone,...state.zoning};
-  return pageTitle('Change workbench', 'Zone with <em>intent.</em>', 'Prepare separate configurations for Fabric A and Fabric B. Each change includes a backout plan and a downloadable ticket.')
-    + `<div class="notice">Uses existing configuration / zoneset names. New alias and zone names must not already exist. The rollback assumes the configuration retains other zones. Review against current switch state before use.</div><form id="zoning-form"><div class="card"><div class="grid cols-4"><label class="field">Switch syntax<select name="vendor"><option value="cisco" ${z.vendor==='cisco'?'selected':''}>Cisco MDS</option><option value="brocade" ${z.vendor==='brocade'?'selected':''}>Brocade FOS</option></select></label>${field('host','Host label',z.host,'text','maxlength="20" required')}${field('array','Array label',z.array,'text','maxlength="20" required')}<label class="field">Zone membership<select name="mode"><option value="sist" ${z.mode==='sist'?'selected':''}>SIST — one target per zone</option><option value="simt" ${z.mode==='simt'?'selected':''}>SIMT — all targets in one zone</option></select></label></div><p class="small-text muted section-gap">Labels: letters, digits and underscores; start with a letter. Up to 16 targets per fabric, one per line.</p><label class="check-field" id="enhanced-label"><input name="enhanced" type="checkbox" ${z.enhanced?'checked':''}>Cisco enhanced zoning — include zone commit</label></div><div class="grid cols-2 section-gap">${['a','b'].map(f => `<section class="card form-panel"><div class="row between"><h3>Fabric ${f.toUpperCase()}</h3><span class="tag">INDEPENDENT PATH</span></div><div class="stack">${field(`${f}Host`,'Host initiator WWPN',z[`${f}Host`],'text','required spellcheck="false"')}<label class="field">Storage target WWPNs<textarea name="${f}Targets" rows="3" class="code-input" required spellcheck="false">${escape(z[`${f}Targets`])}</textarea></label><div class="grid cols-2">${field(`${f}Cfg`,'Existing configuration / zoneset',z[`${f}Cfg`],'text','required maxlength="48"')}<div class="vsan-field">${field(`${f}Vsan`,'VSAN',z[`${f}Vsan`],'number','min="1" max="4093" step="1"')}</div></div></div></section>`).join('')}</div><div class="form-actions"><button class="btn primary" type="submit">Generate change plan ↗</button><button class="btn" type="button" data-action="zoning-reset">Reset inputs</button></div><div id="zoning-error" class="error" role="alert"></div></form><div id="zoning-output"></div>`;
+  return pageTitle('Change workbench', 'Zone with <em>intent.</em>', 'Prepare separate configurations for Fabric A and Fabric B. CLI drafts require complete captured inventory and a named human review. Rollback needs a second, post-change snapshot.')
+    + `<div class="notice">Supported documentation profiles: Cisco MDS NX-OS 9.x and Brocade FOS 8.2.x. Import both fabrics, active configurations, aliases, zones and confirmed login roles. Unknown/partial inventories, pending transactions, drift and name conflicts block output. Recheck actual state immediately before use.</div><form id="zoning-form"><div class="card"><div class="grid cols-4"><label class="field">Switch syntax<select name="vendor"><option value="cisco" ${z.vendor==='cisco'?'selected':''}>Cisco MDS</option><option value="brocade" ${z.vendor==='brocade'?'selected':''}>Brocade FOS</option></select></label>${field('host','Host label',z.host,'text','maxlength="20" required')}${field('array','Array label',z.array,'text','maxlength="20" required')}<label class="field">Zone membership<select name="mode"><option value="sist" ${z.mode==='sist'?'selected':''}>SIST — one target per zone</option><option value="simt" ${z.mode==='simt'?'selected':''}>SIMT — all targets in one zone</option></select></label></div><p class="small-text muted section-gap">Labels: letters, digits and underscores; start with a letter. Up to 16 targets per fabric, one per line.</p><label class="check-field" id="enhanced-label"><input name="enhanced" type="checkbox" ${z.enhanced?'checked':''}>Cisco enhanced zoning — include zone commit</label></div><div class="grid cols-2 section-gap">${['a','b'].map(f => `<section class="card form-panel"><div class="row between"><h3>Fabric ${f.toUpperCase()}</h3><span class="tag">INDEPENDENT PATH</span></div><div class="stack">${field(`${f}Host`,'Host initiator WWPN',z[`${f}Host`],'text','required spellcheck="false"')}<label class="field">Storage target WWPNs<textarea name="${f}Targets" rows="3" class="code-input" required spellcheck="false">${escape(z[`${f}Targets`])}</textarea></label><div class="grid cols-2">${field(`${f}Cfg`,'Existing configuration / zoneset',z[`${f}Cfg`],'text','required maxlength="48"')}<div class="vsan-field">${field(`${f}Vsan`,'VSAN',z[`${f}Vsan`],'number','min="1" max="4093" step="1"')}</div></div></div></section>`).join('')}</div>${evidencePanel('zone','Captured pre-change fabric evidence')}${reviewPanel('zone')}<div class="form-actions"><button class="btn primary" type="submit">Generate change plan ↗</button><button class="btn" type="button" data-action="zoning-reset">Reset inputs</button></div><div id="zoning-error" class="error" role="alert"></div></form><div id="zoning-output"></div>`;
 }
 function refreshZoningVendor() {
   const cisco = $('#zoning-form [name=vendor]').value === 'cisco';
   $$('.vsan-field').forEach(el=>el.hidden=!cisco); $('#enhanced-label').hidden=!cisco;
 }
 function renderZoningOutput() {
-  $('#zoning-output').innerHTML = `<div class="section-head"><h2>Your change plan</h2><button class="btn small" data-action="download-zoning">Download ticket ↓</button></div><div class="grid cols-2">${zoningOutput.map(f=>`<section><div class="row between"><h3>Fabric ${f.fabric}</h3><span class="tag">${f.zoneCount} ${f.zoneCount===1?'ZONE':'ZONES'}</span></div>${codeBlock(f.apply,'IMPLEMENTATION / REVIEW BEFORE EXECUTING')}${codeBlock(f.rollback,'BACKOUT / NEW ZONES ONLY')}</section>`).join('')}</div>`;
+  zoningRollbackOutput=null;
+  $('#zoning-output').innerHTML = `<div class="section-head"><h2>Reviewed offline draft</h2><button class="btn small" data-action="download-zoning">Download ticket ↓</button></div><p class="notice">Checks apply only to the supplied snapshots. Recheck switch identity, health, transactions and current object state immediately before any command. No device was queried or changed.</p><div class="grid cols-2">${zoningOutput.map(f=>`<section><div class="row between"><h3>Fabric ${f.fabric}</h3><span class="tag">${f.zoneCount} ${f.zoneCount===1?'ZONE':'ZONES'}</span></div>${codeBlock(f.preflight,'RECHECK BEFORE APPLYING')}${codeBlock(f.apply,'HUMAN-REVIEWED DRAFT / NOT EXECUTED')}${codeBlock(f.rollback,'ROLLBACK WITHHELD')}</section>`).join('')}</div><details class="card section-gap"><summary>Recorded object ownership and baseline evidence</summary>${codeBlock(JSON.stringify(zoningOutput.map(p=>({fabric:p.fabric,audit:p.audit,ownership:p.ownership})),null,2),'AUDIT / NOT REIMPORTABLE AS AUTHORIZATION')}</details><form id="zoning-rollback-form">${evidencePanel('zoneRollback','Fresh post-change evidence for rollback')}${reviewPanel('zoneRollback')}<button class="btn section-gap" type="submit">Validate rollback draft</button><p id="zone-rollback-error" class="error" role="alert"></p></form><div id="zone-rollback-output"></div>`;
 }
+
 function translatorPage() {
   const t = TRANSLATIONS.find(t=>t.id===currentId)||TRANSLATIONS[0];
   const values = {sid:'000197800001',svm:'svm_apps',vsan:'10',vol:'app_data01',...state.translation};
@@ -220,6 +228,7 @@ function render() {
 }
 window.addEventListener('hashchange',()=>{ render(); if(current!=='commands'||!location.hash.split('/')[2])window.scrollTo(0,0); $('#main').focus({preventScroll:true}); });
 render();
+initEvidenceFiles();
 initEvolution({escape,codeBlock,field,icon,download,pageTitle});
 initHpe({escape,codeBlock,field,icon,download});
 initPure({escape,codeBlock,field,icon,download});
@@ -240,14 +249,14 @@ document.addEventListener('input', e => {
   }
   if (el.id==='incident-notes') { const p=PLAYBOOKS.find(p=>p.id===currentId)||PLAYBOOKS[0];state.notes={...state.notes,[p.id]:el.value};save(); }
   if (el.closest('#upgrade-info')) { const u=UPGRADES.find(u=>u.vendor===currentId)||UPGRADES[0];state.upgradeInfo={...state.upgradeInfo,[u.vendor]:readForm($('#upgrade-info'))};save(); }
-  if (el.closest('#zoning-form')) { zoningOutput=null;$('#zoning-output').innerHTML='';$('#zoning-error').textContent=''; }
+  if (el.closest('#zoning-form')) { if(!el.hasAttribute('data-safety-review'))resetReview(el.closest('form'));zoningOutput=null;zoningRollbackOutput=null;$('#zoning-output').innerHTML='';$('#zoning-error').textContent=''; }
   if (el.closest('#prompt-form')) { generatedPrompt='';$('#prompt-output').innerHTML='<div class="empty section-gap">Inputs changed. Compose again to update the prompt.</div>'; }
 });
 document.addEventListener('change', e => {
   const el=e.target;
   if(el.id==='command-category'){commandCategory=el.value;updateCommands();}
   if(el.id==='saved-only'){savedOnly=el.checked;updateCommands();}
-  if(el.closest('#zoning-form')){refreshZoningVendor();zoningOutput=null;$('#zoning-output').innerHTML='';}
+  if(el.closest('#zoning-form')){if(!el.hasAttribute('data-safety-review'))resetReview(el.closest('form'));refreshZoningVendor();zoningOutput=null;zoningRollbackOutput=null;$('#zoning-output').innerHTML='';}
   if(el.dataset.check){
     const id=el.dataset.check,index=Number(el.dataset.index),checks=new Set(state.checks[id]||[]);
     el.checked?checks.add(index):checks.delete(index);state.checks[id]=[...checks];save();
@@ -257,10 +266,11 @@ document.addEventListener('change', e => {
 });
 document.addEventListener('submit', e => {
   const form=e.target;if(!form.id)return;e.preventDefault();const v=readForm(form);
+  if(form.id==='zoning-rollback-form'){try{zoningRollbackOutput=zoningRollback(zoningOutput,v.zoneRollbackEvidence,reviewValues(v,'zoneRollback'));$('#zone-rollback-error').textContent='';$('#zone-rollback-output').innerHTML=zoningRollbackOutput.map(p=>codeBlock(p.rollback,'DEPENDENCY-CHECKED OFFLINE BACKOUT')).join('');}catch(error){zoningRollbackOutput=null;$('#zone-rollback-error').textContent=error.message;$('#zone-rollback-output').innerHTML='';}return;}
   if(form.id==='zoning-form'){
     try{
-      zoningOutput=generateZoning({host:v.host,array:v.array,vendor:v.vendor,mode:v.mode,enhanced:!!v.enhanced,A:{host:v.aHost,targets:v.aTargets,cfg:v.aCfg,vsan:v.aVsan},B:{host:v.bHost,targets:v.bTargets,cfg:v.bCfg,vsan:v.bVsan}});
-      state.zoning={...v,enhanced:!!v.enhanced};save();$('#zoning-error').textContent='';renderZoningOutput();$('#zoning-output').scrollIntoView({block:'start',behavior:'smooth'});
+      zoningOutput=generateZoning({host:v.host,array:v.array,vendor:v.vendor,mode:v.mode,enhanced:!!v.enhanced,safety:{evidence:v.zoneEvidence,review:reviewValues(v,'zone')},A:{host:v.aHost,targets:v.aTargets,cfg:v.aCfg,vsan:v.aVsan},B:{host:v.bHost,targets:v.bTargets,cfg:v.bCfg,vsan:v.bVsan}});
+      state.zoning={...Object.fromEntries(Object.keys(defaultZone).map(k=>[k,v[k]])),enhanced:!!v.enhanced};save();$('#zoning-error').textContent='';renderZoningOutput();$('#zoning-output').scrollIntoView({block:'start',behavior:'smooth'});
     }catch(error){zoningOutput=null;$('#zoning-error').textContent=error.message;$('#zoning-output').innerHTML='';}return;
   }
   if(form.id==='wwn-form'){
@@ -291,7 +301,7 @@ document.addEventListener('click', e => {
       if(current==='commands'&&savedOnly)updateCommands();break;
     }
     case 'zoning-reset':delete state.zoning;save();render();break;
-    case 'download-zoning':if(zoningOutput)download(`STORAGE ENGINEERING HUB — CHANGE TICKET\nPrepared: ${new Date().toISOString()}\nHost: ${state.zoning.host}\nArray: ${state.zoning.array}\nSwitch: ${state.zoning.vendor}\n\n${zoningOutput.map(f=>f.apply+'\n\n'+f.rollback).join('\n\n')}\n\nVALIDATION\nConfirm effective membership and redundant host paths; record application I/O checks.\n`, `zoning-${state.zoning.host}.txt`);break;
+    case 'download-zoning':if(zoningOutput){try{download(zoningTicket(zoningOutput,zoningRollbackOutput||[]),`zoning-${state.zoning.host}.txt`);}catch(error){toast(error.message);}}break;
     case 'reset-checks':state.checks[id]=[];save();render();break;
     case 'export-incident':{
       const p=PLAYBOOKS.find(p=>p.id===id), checks=state.checks[id]||[];
@@ -326,3 +336,6 @@ $('#search-open').addEventListener('click',openSearch);$('#search-close').addEve
 $('#search-results').addEventListener('click',e=>{if(e.target.closest('a')){commandFilter='';commandCategory='all';savedOnly=false;dialog.close();if(e.target.closest('a').hash===location.hash)render();}});
 dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();dialog.open?dialog.close():openSearch();}if(e.key==='Escape')closeMenu();});
+
+document.addEventListener('click',e=>{const button=e.target.closest('[data-evidence-example]');if(button&&['zone','zoneRollback'].includes(button.dataset.evidenceExample))download(JSON.stringify(zoningEvidenceExample($('#zoning-form [name=vendor]').value),null,2),'san-zoning-evidence-template.json','application/json');});
+for(const event of ['input','change'])document.addEventListener(event,e=>{if(e.target.closest('#zoning-rollback-form')){if(!e.target.hasAttribute('data-safety-review'))resetReview(e.target.closest('form'));zoningRollbackOutput=null;$('#zone-rollback-output').innerHTML='';$('#zone-rollback-error').textContent='';}});

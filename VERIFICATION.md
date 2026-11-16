@@ -52,3 +52,7 @@ The shared shell and all ten routes were restyled with a forest sidebar, native 
 - All 29 Node tests passed. Storage Evolution Chromium checks passed: filters, evidence, reload/deep links, CSV download, invalid ranges, escaping, matrix gaps, model index, global search, light/dark capture and 16 responsive view combinations.
 - Existing main, HPE, Pure and Popular browser suites passed (30, 32, 64 and 56 responsive route checks respectively).
 - Source-linked coverage and open research gaps are recorded in EVOLUTION_COVERAGE.md and in the page. Dates are a static research snapshot; not every historical SKU is included.
+
+## v1.1.0 — P0 zoning safeguards
+
+34 Node tests, syntax/release-metadata checks, the main Chromium regression suite and the dedicated zoning safety browser suite passed. Checks cover complete/fresh evidence, human review, conflicts, supported syntax profiles, ownership/dependency drift, rollback retention, exports, input invalidation and no persisted evidence. No equipment or lab execution was performed. See docs/P0_REVIEW.md for remaining P0-2 work.

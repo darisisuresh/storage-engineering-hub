@@ -110,3 +110,7 @@ Open [Storage Evolution](https://darisisuresh.github.io/storage-engineering-hub/
 ## Author bio
 
 The [About, bio & sources](https://darisisuresh.github.io/storage-engineering-hub/#about) page includes Suresh Kumar Darisi’s short professional bio and public profile links. Role, focus areas and professional memberships were taken from the public GitHub profile reviewed on 2026-11-14.
+
+## Versioned safety releases
+
+See [GitHub releases](https://github.com/darisisuresh/storage-engineering-hub/releases), [CHANGELOG.md](CHANGELOG.md), [P0 review tracking](docs/P0_REVIEW.md), and the [offline evidence contract](docs/CHANGE_EVIDENCE.md). SAN zoning requires fresh complete imported state and human review; rollback requires a distinct post-change capture. Supplied evidence is not live verification. Evidence and reviewer details are not persisted.

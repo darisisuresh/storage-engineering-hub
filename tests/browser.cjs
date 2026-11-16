@@ -6,6 +6,8 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
  const browser = await chromium.launch({headless:true});
  const page = await browser.newPage({viewport:{width:1440,height:1080}});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const {zoningFixture}=await import('./fixtures/safety.mjs');
+ const reviewZone=async(vendor='cisco')=>{await page.locator('[name=zoneEvidence]').fill(JSON.stringify(zoningFixture(vendor)));await page.locator('[name=zoneTicket]').fill('CHG12345');await page.locator('[name=zoneReviewer]').fill('Browser reviewer');for(const name of ['zoneReviewed','zoneSyntax','zoneSnapshot'])await page.locator(`[name=${name}]`).check();};
  const base = process.env.TEST_URL || 'http://127.0.0.1:3000/';
  await page.goto(base);
  await page.getByRole('heading',{name:'Less searching. More engineering.'}).waitFor();
@@ -27,16 +29,16 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
  // Independent fabrics and actual multi-target behavior, including download.
  await page.goto(base+'#zoning');
  await page.locator('[name=aTargets]').fill('5000000000000001\n5000000000000003');
- await page.getByRole('button',{name:'Generate change plan'}).click();
+ await reviewZone();await page.getByRole('button',{name:'Generate change plan'}).click();
  assert.equal(await page.locator('#zoning-output .tag').first().textContent(),'2 ZONES');
  assert.match(await page.locator('#zoning-output pre').first().textContent(),/vsan 10/);
  const ticketPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Download ticket'}).click();
  const ticket=await ticketPromise;assert.equal(ticket.suggestedFilename(),'zoning-app01.txt');
  await page.locator('[name=mode]').selectOption('simt');
  assert.equal(await page.locator('#zoning-output').textContent(),'');
- await page.getByRole('button',{name:'Generate change plan'}).click();assert.equal(await page.locator('#zoning-output .tag').first().textContent(),'1 ZONE');
+ await reviewZone();await page.getByRole('button',{name:'Generate change plan'}).click();assert.equal(await page.locator('#zoning-output .tag').first().textContent(),'1 ZONE');
  await page.locator('[name=vendor]').selectOption('brocade');
- await page.getByRole('button',{name:'Generate change plan'}).click();assert.match(await page.locator('#zoning-output pre').nth(1).textContent(),/cfgRemove/);
+ await reviewZone('brocade');await page.getByRole('button',{name:'Generate change plan'}).click();assert.match(await page.locator('#zoning-output').textContent(),/cfgAdd/);assert.match(await page.locator('#zoning-output').textContent(),/Rollback CLI is withheld/);
  await page.locator('[name=bHost]').fill('2100000000000001');await page.getByRole('button',{name:'Generate change plan'}).click();
  assert.match(await page.locator('#zoning-error').textContent(),/unique/);assert.equal(await page.locator('#zoning-output').textContent(),'');
  // Sizing calculations and malformed WWPN rejection.

@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Complete operator-normalized SAN zoning evidence",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "kind",
+    "exampleOnly",
+    "inventoryComplete",
+    "vendor",
+    "profile",
+    "release",
+    "capturedAt",
+    "snapshotId",
+    "snapshotRef",
+    "fabrics"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "kind": {
+      "const": "san-zoning"
+    },
+    "exampleOnly": {
+      "const": false
+    },
+    "inventoryComplete": {
+      "const": true
+    },
+    "vendor": {
+      "enum": [
+        "cisco",
+        "brocade"
+      ]
+    },
+    "profile": {
+      "enum": [
+        "cisco-mds-9x",
+        "brocade-fos-8.2"
+      ]
+    },
+    "release": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "capturedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "snapshotId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "snapshotRef": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "fabrics": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "fabric",
+          "switchId",
+          "healthy",
+          "pendingChanges",
+          "defaultZone",
+          "zoningMode",
+          "deviceAliasMode",
+          "vsan",
+          "activeCfg",
+          "aliases",
+          "zones",
+          "configs",
+          "logins"
+        ],
+        "properties": {
+          "fabric": {
+            "enum": [
+              "A",
+              "B"
+            ]
+          },
+          "switchId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "healthy": {
+            "const": true
+          },
+          "pendingChanges": {
+            "const": false
+          },
+          "defaultZone": {
+            "const": "deny"
+          },
+          "zoningMode": {
+            "enum": [
+              "basic",
+              "enhanced"
+            ]
+          },
+          "deviceAliasMode": {
+            "enum": [
+              "enhanced",
+              null
+            ]
+          },
+          "vsan": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "activeCfg": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "aliases": {
+            "type": "array",
+            "maxItems": 20000,
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "wwpn"
+              ]
+            }
+          },
+          "zones": {
+            "type": "array",
+            "maxItems": 20000,
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "members"
+              ]
+            }
+          },
+          "configs": {
+            "type": "array",
+            "maxItems": 20000,
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "members"
+              ]
+            }
+          },
+          "logins": {
+            "type": "array",
+            "maxItems": 20000,
+            "items": {
+              "type": "object",
+              "required": [
+                "wwpn",
+                "role",
+                "online"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "description": "Runtime checks additionally validate referential integrity, freshness, mode, profile and proposal ownership. Templates intentionally do not validate."
+}
