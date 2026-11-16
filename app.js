@@ -1,3 +1,4 @@
+import {createPerformanceWorkspace} from './src/performance/ui.js';
 import {initSearch} from './src/ui/search.js';
 import {PRIVACY_STATEMENT} from './src/core/privacy.js';
 import {escape,codeBlock,pageTitle,field,tabs} from './src/ui/components.js';
@@ -41,6 +42,7 @@ const commandDesk=createCommandDesk(context);
 const {paramsFor,commandCard,commandsPage,updateCommands}=commandDesk;
 const {overview,translatorPage,incidentsPage,upgradesPage,automationPage,promptsPage,aboutPage}=createPages(Object.assign(context,{commandCard}));
 const {zoningPage,refreshZoningVendor,renderZoningOutput}=createZoningView(context);
+const performance=createPerformanceWorkspace({download});
 function save(){return persistence.save(state);}
 function toast(message) {
   $('#toast').textContent = message; $('#toast').classList.add('visible');
@@ -58,11 +60,11 @@ document.addEventListener('click', e => { if (document.body.classList.contains('
 function closeMenu() { document.body.classList.remove('menu-open'); $('#menu').setAttribute('aria-expanded','false'); }
 
 function render() {
-  const route=parseRoute(location.hash);const {parts}=route;current=route.current;currentId=route.currentId;
+  const route=parseRoute(location.hash);const {parts}=route;if(current==='performance'&&route.current!=='performance')performance.clear();current=route.current;currentId=route.currentId;
   document.title = `${NAV.find(n=>n[0]===current)[1]} · Storage Engineering Hub`;
   $('#breadcrumb').textContent = NAV.find(n=>n[0]===current)[1];
   $('#navigation').innerHTML = navigationMarkup(current,COMMANDS.length);
-  const views = {evolution:()=>evolutionPage(currentId,{escape,codeBlock,field,icon,download,pageTitle}),hpe:()=>hpePage(currentId,parts[2],{escape,codeBlock,field,icon,download}),home:overview,popular:()=>popularPage(currentId,{escape,codeBlock,field,icon,download,pageTitle}),pure:()=>purePage(currentId,parts[2],{escape,codeBlock,field,icon,download}),commands:commandsPage,zoning:zoningPage,translator:translatorPage,calculators:calculatorsPage,incidents:incidentsPage,upgrades:upgradesPage,automation:automationPage,prompts:promptsPage,about:aboutPage};
+  const views = {performance:performance.page,evolution:()=>evolutionPage(currentId,{escape,codeBlock,field,icon,download,pageTitle}),hpe:()=>hpePage(currentId,parts[2],{escape,codeBlock,field,icon,download}),home:overview,popular:()=>popularPage(currentId,{escape,codeBlock,field,icon,download,pageTitle}),pure:()=>purePage(currentId,parts[2],{escape,codeBlock,field,icon,download}),commands:commandsPage,zoning:zoningPage,translator:translatorPage,calculators:calculatorsPage,incidents:incidentsPage,upgrades:upgradesPage,automation:automationPage,prompts:promptsPage,about:aboutPage};
   $('#main').dataset.page = current;
   $('#main').innerHTML = views[current]();
   if (current==='commands') updateCommands();
@@ -158,7 +160,7 @@ document.addEventListener('click', e => {
     case 'clear-data':{
       if(!confirm('Clear all saved toolkit data in this browser? Download any notes or change tickets you need first.'))break;
       if(!persistence.clear()){toast('Could not remove saved data. Clear this site’s data in browser settings.');break;}
-      state={favorites:[],params:{},checks:{},theme:state.theme};zoningOutput=null;zoningRollbackOutput=null;generatedPrompt='';toast('Saved toolkit data cleared');render();break;
+      performance.clear();state={favorites:[],params:{},checks:{},theme:state.theme};zoningOutput=null;zoningRollbackOutput=null;generatedPrompt='';toast('Saved toolkit data cleared');render();break;
     }
   }
 });

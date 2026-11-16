@@ -53,11 +53,11 @@ npx playwright install --with-deps chromium
 npm run test:browser
 ```
 
-The runner packages the static application, starts a temporary local server, runs all nine suites sequentially and fails on any suite failure. CI deploys that exact tested artifact. `TEST_URL` optionally targets an existing deployment; `BROWSER_SUITES` selects named suites for focused verification. Failure screenshots are retained in ignored `test-artifacts/`. Playwright is a pinned development dependency; the website has no runtime dependencies.
+The runner packages the static application, starts a temporary local server, runs all ten suites sequentially and fails on any suite failure. CI deploys that exact tested artifact. `TEST_URL` optionally targets an existing deployment; `BROWSER_SUITES` selects named suites for focused verification. Failure screenshots are retained in ignored `test-artifacts/`. Playwright is a pinned development dependency; the website has no runtime dependencies.
 
 ## Deployment
 
-The GitHub Actions workflow checks syntax, release metadata, all 122 catalog commands, unit tests and all nine browser suites on pull requests and main pushes. Pages deployment depends on successful validation and publishes the same 47 packaged application files. PR jobs have read-only permissions and cannot deploy. A manual dispatch is also available. Repository branch-protection requirements are managed separately.
+The GitHub Actions workflow checks syntax, release metadata, all 122 catalog commands, unit tests and all ten browser suites on pull requests and main pushes. Pages deployment depends on successful validation and publishes the same 52 packaged application files. PR jobs have read-only permissions and cannot deploy. A manual dispatch is also available. Repository branch-protection requirements are managed separately.
 
 ## Pure Storage workspace
 
@@ -123,3 +123,10 @@ See [the architecture guide](docs/architecture/README.md) for routing, shared co
 In About, turn off **Save toolkit inputs in this browser** for session-only use, remove saved toolkit inputs, or download the [privacy statement](privacy.txt). Enter synthetic or redacted data only; imported evidence, reviewer controls and prompt inputs are excluded from toolkit persistence. Clipboard copies, downloads and other open tabs require separate handling.
 
 See [SECURITY.md](SECURITY.md) for private reporting and the offline trust boundary, and [CONTRIBUTING.md](CONTRIBUTING.md) for changes. [LICENSE](LICENSE) preserves the project's existing **all rights reserved** terms.
+
+
+## Storage Performance Analyzer
+
+Open [Storage Performance Analyzer](https://darisisuresh.github.io/storage-engineering-hub/#performance) from the sidebar. Import/paste a redacted CSV or explore the labeled synthetic demo; map columns and units, select workloads and UTC windows, and compare IOPS, throughput, reported P95/P99 latency, queue depth and capacity. Inspect baseline shifts, trend flags, coverage/gaps and source-record evidence, then export analysis JSON or normalized CSV. Data stays in active page memory and is discarded on leaving the analyzer or reloading.
+
+See [the analyzer guide](docs/PERFORMANCE_ANALYZER.md) for accepted CSV, units, calculations and limits. Findings are adjustable heuristic observations, not a root-cause diagnosis or equipment certification. `tests/performance.test.mjs` and the required `tests/performance-browser.cjs` cover analysis and user workflows.

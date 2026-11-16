@@ -1,0 +1,59 @@
+/* Performance analysis uses the shared forest/mint workspace and native controls. */
+[data-page=performance] h1{max-width:850px}
+.perf-import{border-top:3px solid var(--green)}
+.perf-import h2,.perf-dataset h2{font-size:24px;letter-spacing:-.04em}
+.perf-import p,.perf-methods p,.perf-finding p{font-size:12px;color:var(--muted);line-height:1.8}
+.perf-import-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;margin:24px 0}
+.perf-import-actions .form-actions{margin:0;align-items:center}
+.perf-import input[type=file]{max-width:100%;font-size:12px}
+.perf-import details,.perf-methods details{font-size:12px}
+[data-page=performance] summary{cursor:pointer;font-weight:600;line-height:1.8}
+.perf-mapping-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;margin-top:24px}
+.perf-window-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.perf-window-grid fieldset{min-width:0;border:1px solid var(--line);border-radius:10px;padding:18px}
+.perf-window-grid legend{font-size:11px;font-weight:650;padding:0 8px;color:var(--green)}
+.perf-window-grid input{font-size:11px;padding:10px 8px}
+.perf-thresholds{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.perf-dataset{display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);padding:22px 0}
+.perf-dataset .tag{font-size:9px;margin-bottom:12px}
+.perf-dataset p{font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.perf-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.perf-metric{padding:24px 20px;background:var(--panel);min-width:0}
+.perf-metric strong{font-size:30px;line-height:1.5;letter-spacing:-.04em;display:block;font-weight:550;overflow-wrap:anywhere}
+.perf-metric strong small{font-size:10px;font-weight:500;letter-spacing:0;color:var(--muted)}
+.perf-metric>span:not(.micro){font-size:11px;color:var(--green)}
+.perf-metric p{font-size:10px;line-height:1.7;color:var(--muted);margin-bottom:0}
+.perf-legend{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;font-size:11px;margin-bottom:16px;overflow-wrap:anywhere}
+.perf-legend>span{display:flex;align-items:center;gap:8px;min-width:0}
+.perf-swatch{width:18px;height:3px;display:inline-block;background:var(--green);flex-shrink:0}
+.perf-swatch.perf-series-1{background:#c57c22}
+.perf-baseline-key{padding:3px 8px;background:var(--soft);border-radius:4px;color:var(--muted)}
+.perf-chart{min-width:0;padding:22px 20px 12px}
+.perf-chart h3{font-size:13px;letter-spacing:-.02em;margin:0}
+.perf-chart svg{width:100%;height:auto;display:block;margin-top:12px;overflow:visible}
+.perf-chart text{font:10px ui-monospace,monospace;fill:var(--muted)}
+.perf-line{fill:none;stroke:var(--green);stroke-width:2;vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}
+.perf-line.perf-series-1{stroke:#c57c22;stroke-dasharray:5 4}
+.perf-point{fill:var(--green)}.perf-point.perf-series-1{fill:#c57c22}
+.perf-grid-line{stroke:var(--line);stroke-width:1}
+.perf-baseline-fill{fill:var(--soft)}.perf-analysis-fill{fill:var(--panel)}
+.perf-chart-range{font-size:9px;color:var(--muted);margin:0 0 3px}
+.perf-no-data{min-height:180px;display:grid;place-items:center;text-align:center;font-size:12px;color:var(--muted)}
+.perf-findings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.perf-finding{border-left:3px solid #c57c22;min-width:0}
+.perf-finding h3{font-size:16px;margin:15px 0 10px;letter-spacing:-.025em}
+.perf-finding summary,.perf-finding li{font-size:11px;overflow-wrap:anywhere}
+.perf-finding li{margin:10px 0;color:var(--muted)}
+.perf-finding a{color:var(--green);text-underline-offset:3px}
+.perf-table-wrap{overflow-x:auto;max-width:100%;margin:18px 0}
+.perf-table{width:100%;border-collapse:collapse;font-size:11px;text-align:left;font-variant-numeric:tabular-nums}
+.perf-table caption{text-align:left;color:var(--muted);font-size:10px;padding-bottom:12px}
+.perf-table th,.perf-table td{padding:12px 13px;border-bottom:1px solid var(--line);white-space:nowrap;text-align:left}
+.perf-table thead{background:var(--soft)}
+.perf-table tbody tr:focus{outline:2px solid var(--green);outline-offset:-2px;background:var(--soft)}
+.perf-methods code{overflow-wrap:anywhere;font-size:11px}
+.perf-method-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:22px}
+.perf-method-grid h3{font-size:14px}
+@media(max-width:1200px){.perf-mapping-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.perf-window-grid{grid-template-columns:1fr}.perf-import-actions{grid-template-columns:1fr}.perf-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.perf-thresholds{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.perf-mapping-grid,.perf-thresholds,.perf-method-grid{grid-template-columns:1fr 1fr}.perf-dataset{align-items:flex-start;flex-direction:column}.perf-findings{grid-template-columns:1fr}.perf-metric{padding:18px 14px}.perf-metric strong{font-size:24px}.perf-chart{padding:18px 12px}.perf-window-grid .cols-2{grid-template-columns:1fr}.perf-import .row.between{align-items:flex-start;gap:12px}.perf-import h2{font-size:20px}}
+@media(max-width:390px){.perf-mapping-grid,.perf-thresholds,.perf-method-grid{grid-template-columns:1fr}.perf-metric strong{font-size:21px}.perf-metric .micro{font-size:8px}}

@@ -2,6 +2,26 @@
 
 Versioned releases record completed changes, their validation and remaining limits. No earlier tag is rewritten.
 
+## [1.5.0] — 2026-11-15
+
+### Added
+- Storage Performance Analyzer in the sidebar and global search: local UTF-8 CSV import/paste, column mapping, explicit unit conversion and a labeled synthetic demonstration.
+- Six UTC-aligned charts for IOPS, throughput, reported P95/P99 latency, queue depth and capacity; optional workload comparison and exact/1/5/15-minute alignment.
+- Editable baseline/analysis windows, sample statistics, least-squares trends, adjustable heuristic findings, collection-gap/coverage reporting and links to supporting CSV records.
+- Analysis JSON with version/method/thresholds/evidence and normalized CSV exports with spreadsheet-formula protection for labels.
+- Import/analysis unit coverage and a required browser suite for mapping, units, charts, baselines, exports, escaping, rejected inputs, privacy and responsive themes.
+
+### Updated
+- Privacy guidance documents ephemeral telemetry; data is discarded on leaving the analyzer, clearing it or reloading. No application API, equipment connection or runtime dependencies were added.
+- CI checks all ten browser suites and packages the new modules/styles as part of the tested static artifact.
+
+### Fixed
+- Invalid/replacement imports and edited analysis settings invalidate previous results and exports. Missing values remain unknown; duplicate timestamps, ambiguous dates, malformed CSV and invalid metric values are rejected.
+- Reported quantiles are never pooled into an overall operation percentile; troubleshooting outputs distinguish observations from causal claims.
+
+### Validation and limits
+- See docs/PERFORMANCE_ANALYZER.md and VERIFICATION.md. Heuristic results are not vendor certification, a root-cause diagnosis or a capacity forecast. No physical equipment was tested.
+
 ## [1.4.0] — 2026-11-15
 
 ### Fixed

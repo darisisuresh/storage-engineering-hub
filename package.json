@@ -1,6 +1,6 @@
 {
   "name": "storage-engineering-hub",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "description": "Independent storage engineering toolkit by Suresh Kumar Darisi",

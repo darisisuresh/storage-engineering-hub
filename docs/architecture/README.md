@@ -14,15 +14,16 @@ Storage Engineering Hub remains a buildless ES-module application. No framework,
 | `src/tools/zoning.js` | Zoning evidence/review form and output rendering; safety/ownership rules remain in `zoning-safety.js` and `safety-core.js` |
 | `src/tools/overview.js`, `reference.js`, `operations.js`, `automation.js`, `prompts.js`, `about.js` | Individual existing tool views; `pages.js` composes their factories |
 | Root `pure-*`, `hpe-*`, `evolution-*`, `popular*` | Existing vendor/research/utility modules; their public imports remain stable |
+| `src/performance/` | Bounded CSV import/normalization, offline statistics/findings, SVG chart rendering and ephemeral analyzer UI |
 | `src/styles/` | Ordered workspace, Pure, Popular, HPE, Evolution and command styles, imported by `styles.css` |
 
 ## Data and safety
 
-Saved inputs use the same `seh-v1` key. Reads tolerate missing/malformed data. Writes select supported fields and command parameters; evidence, reviewer controls and prompt contents are excluded. Session-only mode removes durable toolkit inputs and stores only a tab-level setting. Imported evidence remains an untrusted operator assertion. Neither UI refactoring nor browser testing changes P0 authorization, freshness, ownership or dependency rules.
+Saved inputs use the same `seh-v1` key. Reads tolerate missing/malformed data. Writes select supported fields and command parameters; evidence, reviewer controls and prompt contents are excluded. Session-only mode removes durable toolkit inputs and stores only a tab-level setting. Performance telemetry/results remain in the analyzer closure and are discarded on route exit, clear or reload. Imported evidence remains an untrusted operator assertion. Neither UI refactoring nor browser testing changes P0 authorization, freshness, ownership or dependency rules.
 
 ## Packaging and validation
 
-`scripts/site-files.mjs` is the explicit deployment manifest. `package-site.mjs` copies only regular allowlisted assets into `_site`, creates nested directories and rejects unexpected existing entries or symlinks. It does not upload repository files, tests, development dependencies or captures. The browser runner serves only that manifest and runs all nine suites sequentially. CI deploys the same tested artifact after validation.
+`scripts/site-files.mjs` is the explicit deployment manifest. `package-site.mjs` copies only regular allowlisted assets into `_site`, creates nested directories and rejects unexpected existing entries or symlinks. It does not upload repository files, tests, development dependencies or captures. The browser runner serves only that manifest and runs all ten suites sequentially. CI deploys the same tested artifact after validation.
 
 `npm run check` validates syntax of every packaged JS module, local static import/style/shell asset references, the privacy statement's download parity, release metadata and catalog records. This local-reference check does not test external vendor links or replace an AST security scanner. `npm test` covers engineering and safety behavior plus storage migration, route contracts and exporters. `npm run test:browser` checks the application and both adversarial safety workspaces.
 

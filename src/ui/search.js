@@ -10,7 +10,7 @@ const dialog=$('#search-dialog');
 function openSearch(){if(!dialog.open)dialog.showModal();$('#global-search').value='';search();$('#global-search').focus();}
 function search(){
   const q=$('#global-search').value.toLowerCase().trim();
-  const tools=NAV.filter(([key,label])=>q.split(/\s+/).every(term=>`${key} ${label}`.toLowerCase().includes(term))).map(([key,label])=>({title:label,label:'TOOL',href:`#${key}`}));
+  const tools=NAV.filter(([key,label])=>q.split(/\s+/).every(term=>`${key} ${label} ${key==='performance'?'CSV telemetry latency IOPS throughput queue depth workload baseline trends':''}`.toLowerCase().includes(term))).map(([key,label])=>({title:label,label:'TOOL',href:`#${key}`}));
   const cmds=COMMANDS.filter(c=>q.split(/\s+/).every(term=>`${c.title} ${c.syntax} ${c.description} ${VENDORS[c.vendor].name}`.toLowerCase().includes(term))).map(c=>({title:c.title,label:VENDORS[c.vendor].short,href:`#commands/${c.vendor}/${c.id}`}));
   const pureTopics=[...PURE_TOPICS,...PURE_BUILDERS.map(([id,title,note])=>['builders/'+id,title,note])].filter(([id,title,note])=>q.split(/\s+/).every(term=>`pure storage ${id} ${title} ${note}`.toLowerCase().includes(term))).map(([id,title])=>({title:'Pure / '+title,label:'PURE TOPIC',href:`#pure/${id}`}));
   const popularItems=POPULAR_ITEMS.filter(p=>q.split(/\s+/).every(term=>`${p.title} ${p.note} ${p.vendor} ${p.kind}`.toLowerCase().includes(term))).map(p=>({title:p.title,label:p.kind.toUpperCase(),href:`#popular/${p.id}`}));

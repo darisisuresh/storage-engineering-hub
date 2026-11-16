@@ -1,5 +1,5 @@
 Storage Engineering Hub — Privacy and local data
-Version 1.4.0, 2026-11-15
+Version 1.5.0, 2026-11-15
 
 The application runs calculations and reference tools in your browser. It has no
 application API, analytics integration, equipment connection or AI service
@@ -13,10 +13,15 @@ incident notes and upgrade planning fields in localStorage under seh-v1.
 They can remain after the browser closes. Anyone with access to this browser
 profile may read them. The toolkit does not encrypt browser storage.
 
-Imported zoning/Pure evidence, reviewer fields and prompt inputs are not written
+Imported performance CSV telemetry, zoning/Pure evidence, reviewer fields and
+prompt inputs are not written
 to browser storage by the toolkit. They remain in active page memory while
 needed; changing routes or closing the page discards their active form views.
 Clipboard copies and downloads leave the active page and need separate care.
+Performance CSV telemetry and results are held only in active page memory.
+Leaving the analyzer route, clearing its imported data or reloading discards
+them. Analysis JSON and normalized CSV exports contain imported data and labels;
+review them before sharing. Synthetic demonstrations are explicitly labeled.
 Browser extensions, browser session restoration and device policies are outside
 the toolkit's control.
 
