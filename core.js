@@ -46,6 +46,7 @@ export function generateZoning(config) {
     const h = `H_${host}_${f.fabric}`;
     const targets = f.targets.map((wwn, i) => ({ name: `T_${array}_${f.fabric}_${i + 1}`, wwn }));
     const zones = mode === 'simt' ? [{ name: `Z_${host}_${array}_${f.fabric}`, members: [h, ...targets.map(t => t.name)] }] : targets.map((t, i) => ({ name: `Z_${host}_${array}_${f.fabric}_${i + 1}`, members: [h, t.name] }));
+    zones.forEach(z=>z.type='standard');
     const intro = `# Fabric ${f.fabric} — ${mode.toUpperCase()}\n# Assumes existing ${vendor === 'cisco' ? 'zoneset and VSAN' : 'configuration'}. Verify names and existing members first.\n# Review and approve this change before activation.\n`;
     let apply, rollback;
     if (vendor === 'brocade') {

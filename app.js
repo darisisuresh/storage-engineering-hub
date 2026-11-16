@@ -294,7 +294,7 @@ document.addEventListener('submit', e => {
 document.addEventListener('click', e => {
   const b=e.target.closest('[data-action]');if(!b)return;const id=b.dataset.id;
   switch(b.dataset.action){
-    case 'copy-code': copyText($('pre',b.closest('.codeblock')).textContent);break;
+    case 'copy-code': try{if(b.closest('#zoning-output')&&zoningOutput){zoningOutput.forEach(p=>requireFresh(p.audit));(zoningRollbackOutput||[]).forEach(p=>requireFresh(p.audit));}copyText($('pre',b.closest('.codeblock')).textContent);}catch(error){zoningOutput=null;zoningRollbackOutput=null;$('#zoning-output').innerHTML='';resetReview($('#zoning-form'));$('#zoning-error').textContent=error.message;}break;
     case 'favorite':{
       const index=state.favorites.indexOf(id);index<0?state.favorites.push(id):state.favorites.splice(index,1);save();
       const saved=state.favorites.includes(id);b.textContent=saved?'★':'☆';b.classList.toggle('saved',saved);b.setAttribute('aria-pressed',String(saved));b.setAttribute('aria-label',`${saved?'Unsave':'Save'} ${COMMANDS.find(c=>c.id===id).title}`);

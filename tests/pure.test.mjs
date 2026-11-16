@@ -1,8 +1,10 @@
+import {pureSafety} from './fixtures/safety.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {generatePurePlan,pureName,pureSize,purePlanText} from '../pure-core.js';
+import {generatePurePlan as generateReviewedPurePlan,pureName,pureSize,purePlanText} from '../pure-core.js';
 import {PURE_COMMANDS,PURE_FAMILIES,PURE_REFERENCE_MAP,PURE_TOPICS,PURE_MODELS} from '../pure-data.js';
 import {COMMANDS,UPGRADES,TRANSLATIONS} from '../data.js';
+const generatePurePlan=(kind,values)=>generateReviewedPurePlan(kind,{...values,...pureSafety(kind,values)});
 test('Pure reference covers each of the 13 source families and all 11 topic areas',()=>{
  assert.equal(PURE_FAMILIES.length,13);assert.equal(PURE_REFERENCE_MAP.length,11);assert.equal(PURE_COMMANDS.length,66);
  for(const [family]of PURE_FAMILIES)assert.ok(PURE_COMMANDS.some(c=>c.family===family),family);
@@ -29,11 +31,11 @@ test('Pure volume builder validates count, scoped names, suffixes and positive s
  for(const size of ['1e3G','1G;end','InfinityT','G','-1T'])assert.throws(()=>pureSize(size));
  assert.throws(()=>pureName('pod::vol::nested','Volume',true));
 });
-test('Pure connections preserve one ownership scope and allocate bounded optional LUNs',()=>{
+test('Pure connections preserve one ownership scope and require collision-checked explicit bounded LUNs',()=>{
  const p=generatePurePlan('connect',{ownerType:'hgroup',owner:'app_cluster',volumes:'pod::data01\npod::data02',lun:'30'});
  assert.match(p.apply,/purevol connect pod::data01 --hgroup app_cluster --lun 30/);assert.match(p.apply,/data02 --hgroup app_cluster --lun 31/);
- assert.doesNotMatch(p.apply,/--host /);assert.match(p.backout,/purevol disconnect pod::data01 --hgroup app_cluster/);
- assert.doesNotMatch(generatePurePlan('connect',{ownerType:'host',owner:'app01',volumes:'data01'}).apply,/--lun/);
+ assert.doesNotMatch(p.apply,/--host /);assert.match(p.backout,/withheld/);
+ assert.throws(()=>generatePurePlan('connect',{ownerType:'host',owner:'app01',volumes:'data01'}),/explicit starting LUN/);
  for(const values of [{lun:'4095'},{volumes:'a,a'},{owner:'bad\nend'},{ownerType:'both'}])assert.throws(()=>generatePurePlan('connect',{ownerType:'host',owner:'app01',volumes:'a,b',...values}));
 });
 test('Pure disconnection and destruction require acknowledgement; destruction has no eradication',()=>{
@@ -43,6 +45,6 @@ test('Pure disconnection and destruction require acknowledgement; destruction ha
  assert.throws(()=>generatePurePlan('destroy',{volumes:'data01 shutdown',acknowledge:true}));
  assert.throws(()=>generatePurePlan('destroy',{volumes:'data01',acknowledge:'false'}));
  const d=generatePurePlan('disconnect',{ownerType:'host',owner:'app01',volumes:'data01',acknowledge:true});assert.match(d.apply,/purevol disconnect data01 --host app01/);assert.doesNotMatch(d.apply,/destroy/);
- const p=generatePurePlan('destroy',{volumes:'data01,data02',acknowledge:true});assert.match(p.apply,/purevol destroy data02/);assert.doesNotMatch(p.apply,/eradicate/);assert.match(p.preflight,/eradication-config list/);assert.match(p.backout,/purevol recover data01/);
+ const p=generatePurePlan('destroy',{volumes:'data01,data02',acknowledge:true});assert.match(p.apply,/purevol destroy data02/);assert.doesNotMatch(p.apply,/eradicate/);assert.match(p.preflight,/eradication-config list/);assert.match(p.backout,/withheld/);assert.doesNotMatch(p.backout,/purevol recover/);
  assert.match(purePlanText(p),/No array state was queried or changed/);
 });

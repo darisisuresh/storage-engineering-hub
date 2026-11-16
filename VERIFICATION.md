@@ -56,3 +56,7 @@ The shared shell and all ten routes were restyled with a forest sidebar, native 
 ## v1.1.0 — P0 zoning safeguards
 
 34 Node tests, syntax/release-metadata checks, the main Chromium regression suite and the dedicated zoning safety browser suite passed. Checks cover complete/fresh evidence, human review, conflicts, supported syntax profiles, ownership/dependency drift, rollback retention, exports, input invalidation and no persisted evidence. No equipment or lab execution was performed. See docs/P0_REVIEW.md for remaining P0-2 work.
+
+## v1.2.0 — P0 Pure evidence safeguards
+
+40 Node tests and syntax/version checks passed. Full main, Pure, Popular, HPE and Evolution browser suites plus dedicated zoning/Pure safety browser checks passed. Tests cover identity/release/capability gates, complete/fresh evidence, host/initiator conflicts, exact-byte capacity budgets, LUN/owner conflicts, quiescence, snapshots, protection/replication/pod/retention dependencies, human review, stale invalidation, exports, escaping and responsive layouts. Zoning now also checks effective versus defined membership and captured per-switch model/release. Copy/export freshness checks prevent reusing an expired capture through those controls. No equipment or lab execution was performed. Both P0 findings are addressed for the supported offline contracts; remaining P1/P2 work is listed in docs/P0_REVIEW.md.

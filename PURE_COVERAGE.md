@@ -30,3 +30,7 @@ Command families: pureadmin, purealert, purearray, pureaudit, pureconfig, puredn
 15 Node tests pass, including catalog coverage, FC normalization, qualified-name validation, duplicate initiator ownership, name injection, size/sequence validation, LUN bounds, acknowledgement, and separate destruction/recovery semantics. The existing browser suite and the Pure-specific suite pass; the latter checks five builders, exports, assistant matching, prompt escaping, models, question filtering, cross-vendor integration, and 64 responsive route/width combinations. Desktop, mobile and dark screenshots were reviewed.
 
 No commands were executed against equipment. Version-neutral planning does not certify upgrade readiness. Exact personality support, capacity interpretation, maximum LUN values, SafeMode and retention behavior require deployment-specific validation. The builder conservatively limits explicit LUN sequences to 1–4095; it does not query collisions or existing connections.
+
+## v1.2.0 safety update
+
+All five builders now require complete, fresh, identity-matched FlashArray inventory and named human review of the captured state, release-specific CLI help and original snapshot. Connect plans require explicit LUNs. Destruction blocks mappings, snapshots, protection/replication/pod/retention dependencies and unknown recovery policy. Automatic inverse/recovery CLI is withheld. See docs/CHANGE_EVIDENCE.md and docs/P0_REVIEW.md. Older examples describing optional LUNs or recover commands are superseded by these safeguards.

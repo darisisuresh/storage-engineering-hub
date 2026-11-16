@@ -1,3 +1,4 @@
+import {validatePurePlan,assertPurePlanExport} from './pure-safety.js';
 import { normalizeWwn } from './core.js';
 
 export function pureName(value, label = 'Name', scoped = false) {
@@ -18,11 +19,12 @@ function integer(value,min,max,label) {
 }
 export function pureSize(value) {
   const s=String(value||'').trim().toUpperCase();
-  if(!/^(?:\d+(?:\.\d+)?)?(?:K|M|G|T|P)$/.test(s)||!Number.isFinite(Number(s.slice(0,-1)))||Number(s.slice(0,-1))<=0)throw new Error('Size: enter a positive number with a Purity unit K, M, G, T or P, such as 100G or 1.5T.');
+  if(s.length>40||!/^(?:\d+(?:\.\d+)?)?(?:K|M|G|T|P)$/.test(s)||!Number.isFinite(Number(s.slice(0,-1)))||Number(s.slice(0,-1))<=0)throw new Error('Size: enter a positive number with a Purity unit K, M, G, T or P, such as 100G or 1.5T.');
   return s;
 }
 export function generatePurePlan(kind,values) {
   const preflight=['# Confirm the intended array, Purity release, privilege and approved change.', 'purearray list'];
+  let intent={};
   let apply=[],verify=[],backout=[],objects=[],effect='Changes configuration',title;
   if(kind==='host') {
     const protocol=values.protocol;
@@ -42,13 +44,14 @@ export function generatePurePlan(kind,values) {
         if(protocol==='fc')return normalizeWwn(value).replaceAll(':','');
         const prefix=protocol==='iscsi'?'iqn':'nqn';
         const pattern=new RegExp(`^${prefix}\\.\\d{4}-(?:0[1-9]|1[0-2])\\.[A-Za-z0-9.-]+:[A-Za-z0-9._:-]+$`);
-        if(!pattern.test(value))throw new Error(`Host ${host}: use a ${prefix}.YYYY-MM.domain:identifier value. This builder accepts that conservative qualified-name format.`);
+        if(value.length>223||!pattern.test(value))throw new Error(`Host ${host}: use a ${prefix}.YYYY-MM.domain:identifier value. This builder accepts that conservative qualified-name format.`);
         return value;
       });
       for(const value of normalized){const key=value.toLowerCase();if(seen.has(key))throw new Error('An initiator is repeated within or across hosts. Each initiator must have one owner.');seen.add(key);}
       return {host,initiators:normalized};
     });
     if(new Set(hosts.map(h=>h.host)).size!==hosts.length)throw new Error('Host names must be unique.');
+    intent={hosts};
     const option=protocol==='fc'?'--wwnlist':protocol==='iscsi'?'--iqnlist':'--nqnlist';
     preflight.push('purehost list','purehgroup list','pureport list --initiator');
     apply=hosts.map(h=>`purehost create ${h.host} ${option} ${h.initiators.join(',')}${protocol==='nvme'?' --personality nvme':personality==='default'?'':` --personality ${personality}`}`);
@@ -60,6 +63,7 @@ export function generatePurePlan(kind,values) {
     const prefix=pureName(values.prefix,'Volume prefix',true),size=pureSize(values.size);
     const count=integer(values.count,1,100,'Volume count'),start=integer(values.start,0,999999,'Starting index'),width=integer(values.width,1,6,'Index width');
     objects=Array.from({length:count},(_,i)=>pureName(`${prefix}${String(start+i).padStart(width,'0')}`,'Generated volume name',true));
+    intent={size};
     preflight.push('purearray list --space','purevol list');apply=objects.map(vol=>`purevol create ${vol} --size ${size}`);
     verify=objects.map(vol=>`purevol list ${vol}`);
     backout=['# Verify there are no host connections or retained dependencies before planning retirement.','# Do not destroy newly created volumes as an unattended rollback.'];
@@ -71,10 +75,11 @@ export function generatePurePlan(kind,values) {
     if(kind==='disconnect'&&values.acknowledge!==true&&values.acknowledge!=='on')throw new Error('Confirm that application and host dependencies have been reviewed before drafting a disconnection.');
     const firstLun=String(values.lun||'').trim();let lun=null;
     if(kind==='connect'&&firstLun){lun=integer(firstLun,1,4095,'Starting LUN');if(lun+objects.length-1>4095)throw new Error('The generated LUN sequence exceeds the builder’s conservative 4095 limit.');}
+    intent={owner,ownerType:values.ownerType,firstLun:lun};
     preflight.push(`${values.ownerType==='host'?'purehost':'purehgroup'} list --connect ${owner}`,...objects.map(vol=>`purevol list --connect ${vol}`));
     apply=objects.map((vol,i)=>`purevol ${kind} ${vol} ${flag} ${owner}${lun===null?'':` --lun ${lun+i}`}`);
     verify=[`${values.ownerType==='host'?'purehost':'purehgroup'} list --connect ${owner}`,...objects.map(vol=>`purevol list --connect ${vol}`)];
-    backout=kind==='connect'?['# Remove only the exact connections added by this ticket, after host/application coordination.',...objects.map(vol=>`purevol disconnect ${vol} ${flag} ${owner}`)]:['# Record original LUNs in the pre-change evidence. Reconnection must preserve approved LUNs.','# Reconnect with the appropriate --lun value and validate the host before resuming I/O.'];
+    backout=kind==='connect'?['# Compare a fresh post-change snapshot and coordinate application I/O before planning removal of ticket-owned connections.']:['# Record original LUNs in the pre-change evidence. Reconnection must preserve approved LUNs.','# Reconnect with the appropriate --lun value and validate the host before resuming I/O.'];
     title=kind==='connect'?'Connect Pure volumes':'Disconnect Pure volumes';effect=kind==='connect'?'Grants volume access':'Removes volume access';
   } else if(kind==='destroy') {
     if(values.acknowledge!==true&&values.acknowledge!=='on')throw new Error('Confirm target ownership, disconnected state, retention and recovery policy before drafting destruction.');
@@ -82,11 +87,12 @@ export function generatePurePlan(kind,values) {
     preflight.push('purearray eradication-config list',...objects.map(vol=>`purevol list --connect ${vol}`),'# Stop if any connection or retention dependency remains.');
     apply=objects.map(vol=>`purevol destroy ${vol}`);
     verify=['purevol list --pending-only'];
-    backout=['# Recovery is possible only while the array state and retention policy permit it.',...objects.map(vol=>`purevol recover ${vol}`),'# Verify the recovered objects and separately restore the approved connections/LUNs.','# This ticket intentionally contains no eradicate operation.'];
+    backout=['# Recovery is possible only while the array state and retention policy permit it.','# Verify the recovered objects and separately restore the approved connections/LUNs.','# This ticket intentionally contains no eradicate operation.'];
     title='Destroy disconnected Pure volumes';effect='Destroys storage; recovery is policy-dependent';
   } else throw new Error('Unknown Pure builder.');
-  return {title,effect,objects,preflight:preflight.join('\n'),apply:apply.join('\n'),verify:verify.join('\n'),backout:backout.join('\n')};
+  return validatePurePlan({title,effect,objects,preflight:preflight.join('\n'),apply:apply.join('\n'),verify:verify.join('\n'),backout:backout.join('\n')},kind,values,intent);
 }
 export function purePlanText(plan) {
-  return `PURE STORAGE CHANGE DRAFT\n${plan.title}\nImpact: ${plan.effect}\nPrepared: ${new Date().toISOString()}\n\nPRE-CHECKS\n${plan.preflight}\n\nIMPLEMENTATION — REVIEW BEFORE EXECUTING\n${plan.apply}\n\nVERIFICATION\n${plan.verify}\n\nBACKOUT / RECOVERY CONSIDERATIONS\n${plan.backout}\n\nGenerated offline. No array state was queried or changed. Verify syntax with your installed Purity CLI help.\n`;
+  assertPurePlanExport(plan);
+  return `PURE STORAGE CHANGE DRAFT\n${plan.title}\nImpact: ${plan.effect}\nAudit: ${JSON.stringify(plan.audit)}\nOwnership: ${JSON.stringify(plan.ownership)}\nPrepared: ${new Date().toISOString()}\n\nPRE-CHECKS\n${plan.preflight}\n\nIMPLEMENTATION — REVIEW BEFORE EXECUTING\n${plan.apply}\n\nVERIFICATION\n${plan.verify}\n\nBACKOUT / RECOVERY CONSIDERATIONS\n${plan.backout}\n\nGenerated offline. No array state was queried or changed. Verify syntax with your installed Purity CLI help.\n`;
 }

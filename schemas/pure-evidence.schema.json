@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Complete operator-normalized FlashArray change evidence",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "kind",
+    "exampleOnly",
+    "inventoryComplete",
+    "platform",
+    "profile",
+    "arrayId",
+    "release",
+    "capturedAt",
+    "snapshotId",
+    "snapshotRef",
+    "healthy",
+    "pendingChanges",
+    "cliValidation",
+    "capacity",
+    "retention",
+    "hosts",
+    "hgroups",
+    "volumes",
+    "connections",
+    "snapshots",
+    "protectionGroups",
+    "pods"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "kind": {
+      "const": "pure-change"
+    },
+    "exampleOnly": {
+      "const": false
+    },
+    "inventoryComplete": {
+      "const": true
+    },
+    "platform": {
+      "const": "FlashArray"
+    },
+    "profile": {
+      "const": "purity-fa-6x"
+    },
+    "arrayId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "release": {
+      "type": "string",
+      "pattern": "^6\\.[0-9]+\\.[0-9]+([.-][A-Za-z0-9]+)*$"
+    },
+    "capturedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "snapshotId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "snapshotRef": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "healthy": {
+      "const": true
+    },
+    "pendingChanges": {
+      "const": false
+    },
+    "cliValidation": {
+      "type": "object",
+      "required": [
+        "release",
+        "reference",
+        "commands"
+      ],
+      "properties": {
+        "release": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "command",
+              "options"
+            ],
+            "properties": {
+              "command": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "capacity": {
+      "type": "object",
+      "required": [
+        "freePhysicalBytes",
+        "reserveBytes",
+        "allocatableLogicalBytes"
+      ],
+      "properties": {
+        "freePhysicalBytes": {
+          "type": "string",
+          "pattern": "^[0-9]{1,40}$"
+        },
+        "reserveBytes": {
+          "type": "string",
+          "pattern": "^[0-9]{1,40}$"
+        },
+        "allocatableLogicalBytes": {
+          "type": "string",
+          "pattern": "^[0-9]{1,40}$"
+        }
+      }
+    },
+    "retention": {
+      "type": "object",
+      "required": [
+        "policyKnown",
+        "safeModeEnabled",
+        "recoveryProcedureRecorded"
+      ],
+      "properties": {
+        "policyKnown": {
+          "type": "boolean"
+        },
+        "safeModeEnabled": {
+          "type": "boolean"
+        },
+        "recoveryProcedureRecorded": {
+          "type": "boolean"
+        }
+      }
+    },
+    "hosts": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "protocol",
+          "initiators"
+        ]
+      }
+    },
+    "hgroups": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "hosts"
+        ]
+      }
+    },
+    "volumes": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "sizeBytes",
+          "state",
+          "replicationState",
+          "retentionLocked",
+          "ioQuiesced",
+          "ownershipConfirmed",
+          "retirementApproved"
+        ]
+      }
+    },
+    "connections": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "required": [
+          "volume",
+          "ownerType",
+          "owner",
+          "lun"
+        ]
+      }
+    },
+    "snapshots": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "volume"
+        ]
+      }
+    },
+    "protectionGroups": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "volumes"
+        ]
+      }
+    },
+    "pods": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "healthy",
+          "writable",
+          "replicated",
+          "availableLogicalBytes"
+        ]
+      }
+    }
+  },
+  "description": "Runtime validation additionally verifies complete inventory references, exact-byte capacity, owner/group membership and LUN conflicts, target dependencies, release capabilities, freshness and review. This contract does not verify real equipment."
+}

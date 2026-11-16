@@ -59,13 +59,13 @@ node tests/browser.cjs
 
 ## Deployment
 
-The GitHub Actions workflow checks syntax, runs logic tests, packages exactly sixteen application files and publishes GitHub Pages. It has a manual dispatch trigger as well as a push trigger for `main`.
+The GitHub Actions workflow checks syntax, runs logic tests, packages exactly twenty-one application files and publishes GitHub Pages. It has a manual dispatch trigger as well as a push trigger for `main`.
 
 ## Pure Storage workspace
 
 Open [Pure Storage](https://darisisuresh.github.io/storage-engineering-hub/#pure/overview). This independently written extension covers the topic areas in the [requested reference](https://www.rajeshvu.com/storage/pure/), with an in-app coverage map linking each source topic to its replacement. It does not reproduce the original articles, website code, images or command list wholesale.
 
-The command desk includes 35 read-only Pure entries; the dedicated Pure reference additionally labels change examples. Builders support multiple FC/iSCSI/NVMe hosts, optional new host groups, volume sequences, private/shared connections, optional bounded LUN sequences, disconnection, and destruction drafts. All builders run locally and export text. Destruction drafts omit eradication and treat recovery as policy-dependent. No infrastructure action is performed. Builder inputs are not persisted.
+The command desk includes 35 read-only Pure entries; the dedicated Pure reference additionally labels change examples. Builders require complete captured FlashArray evidence, identity matching and named human review, and support multiple FC/iSCSI/NVMe hosts, optional new host groups, volume sequences, private/shared connections, explicit collision-checked bounded LUN sequences, disconnection, and destruction drafts. All builders run locally and export text. Destruction drafts omit eradication, block unresolved dependencies/retention policy, and withhold automatic recovery commands. No infrastructure action is performed. Builder inputs are not persisted.
 
 Model pages separate historical identifiers from family guidance and intentionally omit stale performance/capacity figures. The local assistant performs catalog matching, not model inference. Prompt composition does not contact a provider. Read the exact installed release documentation before using an example.
 
@@ -114,3 +114,5 @@ The [About, bio & sources](https://darisisuresh.github.io/storage-engineering-hu
 ## Versioned safety releases
 
 See [GitHub releases](https://github.com/darisisuresh/storage-engineering-hub/releases), [CHANGELOG.md](CHANGELOG.md), [P0 review tracking](docs/P0_REVIEW.md), and the [offline evidence contract](docs/CHANGE_EVIDENCE.md). SAN zoning requires fresh complete imported state and human review; rollback requires a distinct post-change capture. Supplied evidence is not live verification. Evidence and reviewer details are not persisted.
+
+Pure builders use the [Pure evidence contract](docs/CHANGE_EVIDENCE.md#pure-storage-flasharray). Unsupported, incomplete or ambiguous state blocks output. An offline pass is not live device verification.

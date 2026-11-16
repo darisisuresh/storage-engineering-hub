@@ -2,6 +2,27 @@
 
 Versioned releases record completed changes, their validation and remaining limits. No earlier tag is rewritten.
 
+## [1.2.0] — 2026-11-15
+
+### Fixed
+- Zoning evidence now cross-validates effective versus defined active memberships and captured switch model/per-switch release; divergent or mixed state is blocked.
+- **P0-2, Pure change planning:** all five builders now require complete, fresh, array-identity-matched evidence, captured release-specific CLI help capabilities and a named change review before exposing CLI.
+- Host creation blocks existing names/groups and initiator ownership conflicts. Volume creation blocks existing/pending-destroy names and checks conservative exact-byte physical/logical budgets and pod state.
+- Connections require existing owners/volumes and explicit collision-checked LUNs; existing/shared mappings and overlapping host groups require separate review. Disconnections require the exact mapping, recorded ownership/quiescence and known dependency state.
+- Destruction blocks remaining host/group connections, snapshots, protection groups, replication, pods, retention locks, missing retirement approval and unknown/SafeMode recovery policies.
+- Automatic Pure inverse/recovery commands are withheld pending fresh post-change evidence and a separate reviewed procedure. Copy/export controls recheck freshness and exports include array, release, snapshot, reviewer and ownership metadata.
+
+### Added
+- Pure evidence template/schema and capture guidance; adversarial unit and browser checks, including imported malformed/partial inventories, capacity and mapping conflicts, and review invalidation.
+
+### Updated
+- Pure builder UI, documentation and browser regression fixtures to require explicit imported evidence. Templates remain blocked; production evidence/reviewer data is not persisted.
+
+### Validation and limits
+- Syntax/version checks, 40 Node tests, dedicated Pure and zoning safety browser checks, and existing main, Pure, Popular, HPE and Evolution browser regressions.
+- Both reviewed P0 findings are addressed within the supported offline planning scope. No device was queried or changed; operator-normalized state, capture truthfulness, hardware compatibility and command execution are not independently verified. Unmodeled cases fail closed and require a separate vendor-reviewed procedure.
+- P1/P2 review items remain outside this release; see docs/P0_REVIEW.md.
+
 ## [1.1.0] — 2026-11-15
 
 ### Fixed

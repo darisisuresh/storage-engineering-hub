@@ -78,7 +78,10 @@
           "aliases",
           "zones",
           "configs",
-          "logins"
+          "logins",
+          "model",
+          "release",
+          "effectiveZones"
         ],
         "properties": {
           "fabric": {
@@ -142,8 +145,14 @@
               "type": "object",
               "required": [
                 "name",
-                "members"
-              ]
+                "members",
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "const": "standard"
+                }
+              }
             }
           },
           "configs": {
@@ -167,6 +176,33 @@
                 "role",
                 "online"
               ]
+            }
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "release": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "effectiveZones": {
+            "type": "array",
+            "maxItems": 20000,
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "members",
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "const": "standard"
+                }
+              }
             }
           }
         }
