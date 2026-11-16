@@ -15,11 +15,15 @@ export function raidCapacity(count, tb, level, spares = 0) {
 }
 export function throughput(iops, kib) {
   if (!Number.isFinite(iops) || !Number.isFinite(kib) || iops < 0 || kib <= 0) throw new Error('Enter nonnegative IOPS and a positive block size.');
-  return { mib: iops * kib / 1024, mb: iops * kib * 1024 / 1e6 };
+  const bytes=iops*kib*1024,mib=bytes/2**20,mb=bytes/1e6;
+  if(![bytes,mib,mb].every(Number.isFinite)||(iops>0&&(bytes===0||mib===0||mb===0)))throw new Error('Throughput exceeds the supported numeric range.');
+  return {mib,mb};
 }
 export function transferHours(tb, mbps, efficiency) {
   if (![tb, mbps, efficiency].every(Number.isFinite) || tb <= 0 || mbps <= 0 || efficiency <= 0 || efficiency > 100) throw new Error('Use positive values and an efficiency between 0 and 100%.');
-  return tb * 1e12 * 8 / (mbps * 1e6 * efficiency / 100) / 3600;
+  const bytes=tb*1e12,rate=mbps*1e6/8*(efficiency/100),hours=bytes/rate/3600;
+  if(![bytes,rate,hours].every(Number.isFinite)||bytes<=0||rate<=0||hours<=0)throw new Error('Transfer estimate exceeds the supported numeric range.');
+  return hours;
 }
 function name(value, label, max = 48) {
   if (!new RegExp(`^[A-Za-z][A-Za-z0-9_]{0,${max - 1}}$`).test(String(value))) throw new Error(`${label}: start with a letter; use letters, digits and underscores only (maximum ${max}).`);

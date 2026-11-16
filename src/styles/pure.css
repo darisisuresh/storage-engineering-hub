@@ -1,7 +1,7 @@
 /* Pure Storage extends the existing vendor workspace without changing other tools. */
 .vendor-grid { grid-template-columns: repeat(5,minmax(0,1fr)); }
 .vendor-pure { --vendor-color: #c36b35; --vendor-bg: #fff0e7; }
-.pure-workspace { --pure-accent: #b45a2c; --pure-soft: #fff2e8; }
+.pure-workspace { --pure-accent: #9a4820; --pure-soft: #fff2e8; }
 .pure-header { align-items: center; }
 .pure-header h1 { font-size: clamp(29px,3vw,42px); }
 .pure-vendor-badge { display: flex; gap: 12px; align-items: center; padding: 16px; border: 1px solid #e3b39566; background: var(--panel); border-radius: 13px; color: var(--pure-accent); text-decoration: none; flex-shrink: 0; }
@@ -15,7 +15,7 @@
 .pure-topic-link { display: block; text-decoration: none; transition: transform .2s,border-color .2s; }.pure-topic-link:hover { transform: translateY(-3px); border-color: var(--pure-accent); }.pure-topic-link h3 { margin-top: 18px; font-size: 15px; }.pure-topic-link p,.pure-family-grid p { font-size: 11px; color: var(--muted); }.pure-topic-link .inline-link { color: var(--pure-accent); margin-top: 6px; }
 .pure-tag { background: var(--pure-soft); color: var(--pure-accent); border-color: #dba27c44; }
 .pure-family-grid a { text-decoration: none; }.pure-family-grid strong { color: var(--pure-accent); font: 11px ui-monospace,monospace; }.pure-family-grid h3 { font-size: 13px; margin-top: 10px; }.pure-family-grid a:hover { border-color: var(--pure-accent); }
-.effect-label { font: 9px ui-monospace,monospace; color: var(--green); }.effect-change { color: #b05c33; background: var(--pure-soft); padding: 4px 7px; border-radius: 4px; }
+.effect-label { font: 9px ui-monospace,monospace; color: var(--green); }.effect-change { color: var(--pure-accent, #98451f); background: var(--pure-soft); padding: 4px 7px; border-radius: 4px; }
 .pure-command { margin-top: 14px; }.pure-command .codebar { font-size: 8px; }
 .pure-details { padding: 18px; border: 1px solid var(--line); border-radius: 10px; margin-bottom: 12px; background: var(--panel); }.pure-details summary { cursor: pointer; font-size: 12px; font-weight: 550; }.pure-details summary .effect-label { display: inline-block; margin-left: 12px; font-weight: 400; }.pure-details[open] summary { color: var(--pure-accent); }
 .coverage-map { display: grid; gap: 0; margin-top: 16px; }.coverage-map>div { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 11px; }

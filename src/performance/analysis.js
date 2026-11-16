@@ -70,7 +70,9 @@ export function analyzeWorkload(records,key,options={}){
  const metrics=Object.fromEntries(METRICS.map(k=>{
   const now=summarize(current,k),before=summarize(baseline,k),delta=now.count>=3&&before.count>=3?now.mean-before.mean:null;
   now.trend=trendLabel(now);before.trend=trendLabel(before);
-  return [k,{current:now,baseline:before,delta,percentChange:delta===null||before.mean===0?null:delta/before.mean*100}];
+  const ratio=delta===null||before.mean===0?null:delta/before.mean*100;
+  const comparisonStatus=delta===null?'insufficient-samples':before.mean===0?'zero-baseline':!Number.isFinite(ratio)?'out-of-range':'available';
+  return [k,{current:now,baseline:before,delta,comparisonStatus,percentChange:comparisonStatus==='available'?ratio:null}];
  }));
  const findings=[];
  const add=(id,title,observation,next,rows,level='review')=>findings.push({id,title,level,observation,next,evidence:evidence(rows)});

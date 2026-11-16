@@ -23,7 +23,7 @@ Saved inputs use the same `seh-v1` key. Reads tolerate missing/malformed data. W
 
 ## Packaging and validation
 
-`scripts/site-files.mjs` is the explicit deployment manifest. `package-site.mjs` copies only regular allowlisted assets into `_site`, creates nested directories and rejects unexpected existing entries or symlinks. It does not upload repository files, tests, development dependencies or captures. The browser runner serves only that manifest and runs all ten suites sequentially. CI deploys the same tested artifact after validation.
+`scripts/site-files.mjs` is the explicit deployment manifest. `package-site.mjs` copies only regular allowlisted assets into `_site`, creates nested directories and rejects unexpected existing entries or symlinks. It does not upload repository files, tests, development dependencies or captures. The browser runner serves only that manifest and runs all eleven suites sequentially. CI deploys the same tested artifact after validation.
 
 `npm run check` validates syntax of every packaged JS module, local static import/style/shell asset references, the privacy statement's download parity, release metadata and catalog records. This local-reference check does not test external vendor links or replace an AST security scanner. `npm test` covers engineering and safety behavior plus storage migration, route contracts and exporters. `npm run test:browser` checks the application and both adversarial safety workspaces.
 

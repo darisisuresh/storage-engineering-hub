@@ -24,3 +24,11 @@ export function handleCalculatorSubmit(form,v){
   }
 return false;
 }
+
+export function initCalculatorInputs(){
+ const outputs={'raid-form':'raid-result','throughput-form':'throughput-result','transfer-form':'transfer-result','wwn-form':'wwn-result'};
+ for(const event of ['input','change'])document.addEventListener(event,e=>{
+  const id=outputs[e.target.closest('form')?.id],output=id?document.getElementById(id):null;
+  if(output?.textContent.trim())output.innerHTML='<p class="page-note">Inputs changed. Submit the form again to update this result.</p>';
+ });
+}

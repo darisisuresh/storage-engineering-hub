@@ -3,7 +3,7 @@ import {readFile,mkdir} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
 import {resolve} from 'node:path';
 import {SITE_FILES} from './site-files.mjs';
-const suites=['browser','pure-browser','popular-browser','hpe-browser','evolution-browser','zoning-safety-browser','pure-safety-browser','p1-browser','p2-browser','performance-browser'];
+const suites=['browser','pure-browser','popular-browser','hpe-browser','evolution-browser','zoning-safety-browser','pure-safety-browser','p1-browser','p2-browser','performance-browser','website-browser'];
 const selected=process.env.BROWSER_SUITES ? process.env.BROWSER_SUITES.split(',') : suites;
 if(!selected.length||selected.some(s=>!suites.includes(s)))throw new Error('Unknown browser suite');
 const run=(cmd,args,env=process.env)=>new Promise((ok,no)=>{const c=spawn(cmd,args,{stdio:'inherit',env,timeout:240000});c.on('error',no);c.on('exit',(code,signal)=>code===0?ok():no(new Error(`${args.join(' ')} failed: ${code??signal}`)));});

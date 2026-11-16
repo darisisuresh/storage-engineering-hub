@@ -9,7 +9,7 @@ import {createPersistence} from './src/core/persistence.js';
 import {createCommandDesk} from './src/tools/commands.js';
 import {createPages} from './src/tools/pages.js';
 import {createZoningView,defaultZone} from './src/tools/zoning.js';
-import {calculatorsPage,handleCalculatorSubmit} from './src/tools/calculators.js';
+import {calculatorsPage,handleCalculatorSubmit,initCalculatorInputs} from './src/tools/calculators.js';
 import {incidentExport,upgradeExport,composePrompt} from './src/core/exporters.js';
 import {APP_VERSION} from './release-info.js';
 import {zoningRollback,zoningEvidenceExample,zoningTicket} from './zoning-safety.js';
@@ -55,9 +55,12 @@ setTheme(state.theme === 'dark' ? 'dark' : 'light');
 $('#menu').innerHTML = icon('menu');
 $('#search-open').insertAdjacentHTML('afterbegin', icon('search'));
 $('#theme').addEventListener('click', () => { state.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; setTheme(state.theme); save(); });
-$('#menu').addEventListener('click', () => { const open = document.body.classList.toggle('menu-open'); $('#menu').setAttribute('aria-expanded', String(open)); });
+const mobileNavigation=window.matchMedia('(max-width: 760px)');
+function syncNavigationAccess(){const hidden=mobileNavigation.matches&&!document.body.classList.contains('menu-open');$('#sidebar').inert=hidden;if(hidden)$('#sidebar').setAttribute('aria-hidden','true');else $('#sidebar').removeAttribute('aria-hidden');}
+$('#menu').addEventListener('click', () => { const open = document.body.classList.toggle('menu-open'); $('#menu').setAttribute('aria-expanded', String(open));syncNavigationAccess();if(open)$('#navigation a.active')?.focus(); });
+mobileNavigation.addEventListener('change',()=>closeMenu());
 document.addEventListener('click', e => { if (document.body.classList.contains('menu-open') && !e.target.closest('aside') && !e.target.closest('#menu')) closeMenu(); });
-function closeMenu() { document.body.classList.remove('menu-open'); $('#menu').setAttribute('aria-expanded','false'); }
+function closeMenu(restoreFocus=false) { const open=document.body.classList.contains('menu-open');document.body.classList.remove('menu-open'); $('#menu').setAttribute('aria-expanded','false');syncNavigationAccess();if(open&&restoreFocus)$('#menu').focus(); }
 
 function render() {
   const route=parseRoute(location.hash);const {parts}=route;if(current==='performance'&&route.current!=='performance')performance.clear();current=route.current;currentId=route.currentId;
@@ -81,6 +84,7 @@ function render() {
 bindRouter(render,()=>current);
 render();
 initEvidenceFiles();
+initCalculatorInputs();
 initEvolution({escape,codeBlock,field,icon,download,pageTitle});
 initHpe({escape,codeBlock,field,icon,download});
 initPure({escape,codeBlock,field,icon,download});

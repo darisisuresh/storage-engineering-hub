@@ -22,4 +22,4 @@ Submit a minimal synthetic reproduction, affected release/route, expected and ob
 
 ## Verification
 
-PR/main CI checks syntax and local module/style asset references, command metadata, unit tests and all browser suites, including adversarial P0 fixtures. Deployment depends on successful validation and consumes the tested allowlisted artifact. These checks are not a penetration test, an external link availability monitor or a vendor certification.
+PR/main CI checks syntax and local module/style asset references, command metadata, unit tests and all browser suites, including adversarial P0 fixtures and the website proof/accessibility suite. Deployment depends on successful validation and consumes the tested allowlisted artifact. These checks are not a penetration test, an external link availability monitor or a vendor certification.

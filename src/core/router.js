@@ -10,5 +10,8 @@ export function parseRoute(hash,nav=NAV){
 export function navigationMarkup(current,count){return NAV.map(([key,label])=>`<a href="#${key}" class="${current===key?'active':''}" ${current===key?'aria-current="page"':''}><span class="nav-icon">${icon(NAV_ICONS[key])}</span><span>${label}</span>${key==='commands'?`<span class="nav-count">${count}</span>`:''}</a>`).join('');}
 export function bindRouter(render,getCurrent){
  const handler=()=>{render();if(getCurrent()!=='commands'||!location.hash.split('/')[2])window.scrollTo(0,0);document.querySelector('#main').focus({preventScroll:true});};
- window.addEventListener('hashchange',handler);return ()=>window.removeEventListener('hashchange',handler);
+ const skip=document.querySelector('.skip');
+ const focusWorkspace=event=>{event.preventDefault();const main=document.querySelector('#main');main.focus({preventScroll:true});main.scrollIntoView({block:'start'});};
+ skip?.addEventListener('click',focusWorkspace);
+ window.addEventListener('hashchange',handler);return ()=>{window.removeEventListener('hashchange',handler);skip?.removeEventListener('click',focusWorkspace);};
 }

@@ -22,7 +22,7 @@ function search(){
 $('#search-open').addEventListener('click',openSearch);$('#search-close').addEventListener('click',()=>dialog.close());$('#global-search').addEventListener('input',search);
 $('#search-results').addEventListener('click',e=>{if(e.target.closest('a')){resetCommands();dialog.close();if(e.target.closest('a').hash===location.hash)render();}});
 dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
-document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();dialog.open?dialog.close():openSearch();}if(e.key==='Escape')closeMenu();});
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();dialog.open?dialog.close():openSearch();}if(e.key==='Escape')closeMenu(true);});
 
 
 }

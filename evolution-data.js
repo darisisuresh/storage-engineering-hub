@@ -30,9 +30,11 @@ export const EVOLUTION_SOURCES = {
     "published": ""
   },
   "netapp3200": {
-    "title": "NetApp architect: original FAS3200 family introduced in 2010",
-    "url": "https://community.netapp.com/fukiw75442/attachments/fukiw75442/tech-on-tap-articles/80/1/1301tot_article_feature_pdf_v2.pdf",
-    "publisher": "NetApp Tech OnTap",
+    "title": "NetApp fiscal 2011 filing: FAS3200 family and November 2010 product launches",
+    "url": "https://www.sec.gov/Archives/edgar/data/1002047/000119312511171858/d10k.htm",
+    "originalUrl": "https://community.netapp.com/fukiw75442/attachments/fukiw75442/tech-on-tap-articles/80/1/1301tot_article_feature_pdf_v2.pdf",
+    "accessNote": "Original Tech OnTap PDF returned 404 during the website audit. The previously reviewed introduction year is retained; this filing corroborates the product family and launch period.",
+    "publisher": "NetApp filing via SEC",
     "published": ""
   },
   "netapp8000": {
@@ -42,9 +44,11 @@ export const EVOLUTION_SOURCES = {
     "published": ""
   },
   "netapp8000models": {
-    "title": "NetApp platform architect: FAS8020, FAS8040 and FAS8060",
-    "url": "https://community.netapp.com/fukiw75442/attachments/fukiw75442/tech-on-tap-articles/294/1/1406tot_article_feature_pdf.pdf",
-    "publisher": "NetApp Tech OnTap",
+    "title": "NetApp fiscal 2014 filing: FAS8020, FAS8040 and FAS8060",
+    "url": "https://www.sec.gov/Archives/edgar/data/1002047/000119312514239169/d691214d10k.htm",
+    "originalUrl": "https://community.netapp.com/fukiw75442/attachments/fukiw75442/tech-on-tap-articles/294/1/1406tot_article_feature_pdf.pdf",
+    "accessNote": "Original Tech OnTap PDF returned 404 during the website audit. This NetApp filing corroborates the model names; the separate annual-report source supports the February 2014 release date.",
+    "publisher": "NetApp filing via SEC",
     "published": ""
   },
   "netapp700s": {
@@ -199,7 +203,7 @@ export const EVOLUTION_SOURCES = {
   },
   "powerstore": {
     "title": "Dell introduces PowerStore",
-    "url": "https://investors.delltechnologies.com/node/10826",
+    "url": "https://www.dell.com/en-us/dt/corporate/newsroom/announcements/detailpage.press-releases~usa~2020~05~20200505-dellemc-powerstore.htm",
     "publisher": "Dell Technologies",
     "published": "2020-05-05"
   },

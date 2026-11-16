@@ -2,6 +2,23 @@
 
 Versioned releases record completed changes, their validation and remaining limits. No earlier tag is rewritten.
 
+## [1.5.1] — 2026-11-15
+
+### Fixed
+- Skip-to-workspace navigation now focuses the active tool without changing its route or discarding analyzer data. Collapsed mobile navigation is inert, exposes its expanded state and restores menu focus on Escape.
+- Malformed file-based CSV imports show a rejection instead of remaining stuck in validation. Refreshing the analyzer route clears hidden telemetry and pending reads; canonical CSV headers are displayed accurately.
+- Throughput/transfer calculations reject overflow and unrepresentable results. Editing calculator inputs invalidates old answers. Analyzer baseline ratios outside the numeric range remain explicitly unavailable.
+- Improved light-theme muted/Pure impact text contrast and removed background transitions that briefly mismatched button text during theme changes.
+- Proofread task questions and planning descriptions; removed unverified release-validation and automatic-backout implications.
+- Replaced three confirmed missing research URLs with relevant Dell/NetApp primary references and disclosed historical corroboration limits while preserving original URL provenance.
+
+### Added
+- A pinned development-only accessibility auditor and required website proof browser suite: 40 route/theme accessibility states, keyboard navigation, malformed/UTF-8 files, calculator edge cases and responsive navigation.
+- Audit scope, findings, reference-check limits and validation in docs/WEBSITE_AUDIT.md.
+
+### Updated
+- Metadata and verification documentation reflect HPE and performance analysis. CI runs all eleven browser suites; no runtime dependency or equipment connection was added.
+
 ## [1.5.0] — 2026-11-15
 
 ### Added

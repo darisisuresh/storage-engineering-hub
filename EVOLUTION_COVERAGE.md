@@ -18,13 +18,13 @@ Family-level milestones do not assign a shared launch day to every later SKU. Or
 | 1996-01 | netapp | F220 | Introduced | [Network Appliance](https://investors.netapp.com/static-files/0f78cc94-ad92-4bc7-b74c-606ade331abe) |
 | 1996-05 | netapp | F540 | Announced | [Network Appliance](https://investors.netapp.com/static-files/0f78cc94-ad92-4bc7-b74c-606ade331abe) |
 | 2009-04-14 | dell | Symmetrix V-Max | Announced | [EMC (Dell archive)](https://www.dell.com/en-us/dt/corporate/newsroom/announcements/2009/04/20090414-01.htm) |
-| 2010 | netapp | FAS3200 series | Introduced | [NetApp Tech OnTap](https://community.netapp.com/fukiw75442/attachments/fukiw75442/tech-on-tap-articles/80/1/1301tot_article_feature_pdf_v2.pdf) |
+| 2010 | netapp | FAS3200 series | Introduced | [NetApp Tech OnTap](https://www.sec.gov/Archives/edgar/data/1002047/000119312511171858/d10k.htm) |
 | 2011-01-18 | dell | VNX series, VNXe series | Announced | [EMC via PR Newswire](https://www.prnewswire.com/news-releases/emc-unveils-new-vnx-unified-storage-family-delivering-record-breaking-simplicity-efficiency-and-affordability-114049519.html), [EMC via PR Newswire](https://www.prnewswire.com/news-releases/new-emc-vnxe-and-vnx-unified-storage-now-shipping-worldwide-117576888.html) |
 | 2011-07-13 | dell | VMAXe | Announced | [EMC (Dell archive)](https://www.dell.com/en-us/dt/corporate/newsroom/announcements/2011/07/20110713-01.htm) |
 | 2012-05 | pure | FlashArray — first commercial generation | Launched | [Pure Storage filing with SEC](https://www.sec.gov/Archives/edgar/data/1474432/000119312515326779/d895532ds1a.htm) |
 | 2013-09-04 | dell | VNX5200, VNX5400, VNX5600, VNX5800, VNX7600, VNX8000 | Announced | [EMC via PR Newswire](https://www.prnewswire.com/news-releases/new-emc-vnx-shatters-the-definition-and-economics-of-midrange-storage-222314001.html) |
 | 2013-11-14 | dell | XtremIO X-Brick platform | GA confirmed | [EMC (Dell archive)](https://www.dell.com/en-us/dt/corporate/newsroom/announcements/2013/11/20131114-02.htm) |
-| 2014-02 | netapp | FAS8020, FAS8040, FAS8060 | Released | [NetApp](https://investors.netapp.com/static-files/ea62f992-44f6-476e-807c-84c49fe1be85), [NetApp Tech OnTap](https://community.netapp.com/fukiw75442/attachments/fukiw75442/tech-on-tap-articles/294/1/1406tot_article_feature_pdf.pdf) |
+| 2014-02 | netapp | FAS8020, FAS8040, FAS8060 | Released | [NetApp](https://investors.netapp.com/static-files/ea62f992-44f6-476e-807c-84c49fe1be85), [NetApp Tech OnTap](https://www.sec.gov/Archives/edgar/data/1002047/000119312514239169/d691214d10k.htm) |
 | 2014-07-08 | dell | S210, X410 | Announced | [EMC (Dell archive)](https://www.dell.com/en-us/dt/corporate/newsroom/announcements/2014/07/20140708-03.htm) |
 | 2015 | hpe | StoreServ 20000 series | Introduction year | [HPE Support](https://support.hpe.com/hpesc/public/docDisplay?docId=c05050717&docLocale=en_US) |
 | 2015-06-01 | pure | //m20, //m50, //m70 | Announced | [Pure Storage via PR Newswire](https://www.prnewswire.com/news-releases/pure-storage-unveils-flasharraym-pure1-and-evergreen-storage-introducing-a-simpler-and-more-efficient-model-for-storage-ownership-300091529.html) |
@@ -43,7 +43,7 @@ Family-level milestones do not assign a shared launch day to every later SKU. Or
 | 2019-08-20 | netapp | EF600 | Announced | [NetApp](https://www.netapp.com/ja/newsroom/press-releases/news-rel-20190820-456600/) |
 | 2019-09-17 | pure | FlashArray//C | Announced | [Pure Storage (Everpure archive)](https://www.everpuredata.com/au/company/newsroom/press-releases/expanded-pure-portfolio.html/) |
 | 2019-10-29 | netapp | AFF A400 | Announced | [NetApp](https://www.netapp.com/blog/reinvent-your-modern-it-with-the-newest-aff-nvme-all-flash-storage/) |
-| 2020-05-05 | dell | 1000T / 1000X, 3000T / 3000X, 5000T / 5000X, 7000T / 7000X, 9000T / 9000X | Announced | [Dell Technologies](https://investors.delltechnologies.com/node/10826), [Dell InfoHub](https://www.dell.com/en-us/infohub/articles/dell-powerstore-introduction-to-gen-1-gen-2-platforms) |
+| 2020-05-05 | dell | 1000T / 1000X, 3000T / 3000X, 5000T / 5000X, 7000T / 7000X, 9000T / 9000X | Announced | [Dell Technologies](https://www.dell.com/en-us/dt/corporate/newsroom/announcements/detailpage.press-releases~usa~2020~05~20200505-dellemc-powerstore.htm), [Dell InfoHub](https://www.dell.com/en-us/infohub/articles/dell-powerstore-introduction-to-gen-1-gen-2-platforms) |
 | 2020-06-16 | dell | F200, F600 | Announced | [Dell Technologies](https://www.dell.com/en-us/dt/corporate/newsroom/announcements/detailpage.press-releases~usa~2020~06~20200616-dell-technologies-powerscale-storage.htm) |
 | 2020-08-25 | pure | FlashArray//C — second generation | Announced | [Pure Storage (Everpure archive)](https://www.everpuredata.com/au/company/newsroom/press-releases/second-generation-flasharray-c.html) |
 | 2020-09-08 | hpe | MSA 1060, MSA 2060, MSA 2062 | Announced | [HPE](https://www.hpe.com/us/en/newsroom/press-release/2020/09/hewlett-packard-enterprise-announces-simple-and-affordable-next-generation-storage-solution-for-small-businesses.html), [HPE Support](https://downloads.hpe.com/pub/softlib2/software1/pubsw-linux/p1817302058/v188821/R0Q73-90011.html) |
@@ -90,3 +90,5 @@ The left sidebar links to #evolution. The timeline groups milestones by year; th
 ## Validation
 
 Logic tests cover provenance/schema integrity, combined filters, historical protocol distinctions, gap years, date precision, bookmark sanitization and CSV evidence. The Chromium suite checks all four views, deep links, data filters, real CSV download, invalid ranges, escaping, global search and 16 responsive view combinations (320/390/768/1440px), plus light/dark captures. Test results do not certify vendor equipment or establish current model support.
+
+Website audit v1.5.1: replaced a missing Dell investor URL with the original Dell newsroom announcement. The two missing Tech OnTap attachment URLs are retained as originalUrl metadata; linked SEC filings provide corroborating family/model context. Access notes distinguish that context from the previously reviewed introduction date and the separate FAS8000 date evidence.

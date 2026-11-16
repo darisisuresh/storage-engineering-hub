@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  --paper: #f2f6f5; --panel: #fff; --ink: #172b27; --muted: #647973;
+  --paper: #f2f6f5; --panel: #fff; --ink: #172b27; --muted: #526a62;
   --line: #e0e9e5; --green: #08795d; --soft: #e9f5ef; --danger: #b23b38;
   --code: #122622; --code-ink: #c7e6d9; --shadow: 0 4px 22px #163f2e05;
   --radius: 15px; --sidebar: 248px;
@@ -153,7 +153,7 @@ p { margin: 0 0 12px; }
 .syntax-comment { color: #81a08e; }.syntax-key { color: #90dbb4; }.syntax-number { color: #e1c89a; }
 .terminal-foot { border-top: 1px solid #31503c; padding: 11px 16px; display: flex; align-items: center; gap: 7px; color: #98baa5; font-size: 8px; }
 .terminal-foot .icon { width: 11px; height: 11px; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 11px 15px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); text-decoration: none; color: var(--ink); font-size: 11px; font-weight: 600; min-height: 40px; transition: box-shadow .18s,background .18s,transform .18s; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 11px 15px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); text-decoration: none; color: var(--ink); font-size: 11px; font-weight: 600; min-height: 40px; transition: box-shadow .18s,transform .18s; }
 .btn .icon { width: 14px; height: 14px; }
 .btn:hover { border-color: var(--green); box-shadow: 0 3px 10px #153d2e0a; transform: translateY(-1px); }
 .btn.primary { background: var(--green); color: var(--paper); border-color: var(--green); box-shadow: 0 3px 8px #164b2c0a; }
@@ -187,7 +187,7 @@ input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--green); }
 input[type=search] { font-size: 12px; }
 .check-field { display: flex; gap: 9px; align-items: center; font-size: 11px; }
 .tabs { display: flex; gap: 7px; flex-wrap: wrap; margin: 22px 0; }
-.tabs a,.tabs button { padding: 9px 13px; border: 1px solid var(--line); border-radius: 7px; text-decoration: none; background: var(--panel); color: var(--muted); font-size: 11px; transition: background .18s; }
+.tabs a,.tabs button { padding: 9px 13px; border: 1px solid var(--line); border-radius: 7px; text-decoration: none; background: var(--panel); color: var(--muted); font-size: 11px; transition: border-color .18s; }
 .tabs a:hover { background: var(--soft); }
 .tabs .selected { background: var(--green); border-color: var(--green); color: var(--paper); box-shadow: 0 3px 8px #134d310d; }
 .command { padding: 22px 24px; margin-bottom: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
