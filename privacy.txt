@@ -1,0 +1,43 @@
+Storage Engineering Hub — Privacy and local data
+Version 1.4.0, 2026-11-15
+
+The application runs calculations and reference tools in your browser. It has no
+application API, analytics integration, equipment connection or AI service
+connection. Loading the site sends normal hosting requests to GitHub Pages.
+Opening external reference links sends requests to the selected vendor/site.
+The host and external sites have their own data-handling practices.
+
+With saving enabled, the toolkit stores theme, favorites, editable command
+parameters, zoning form identifiers, translation inputs, checklist progress,
+incident notes and upgrade planning fields in localStorage under seh-v1.
+They can remain after the browser closes. Anyone with access to this browser
+profile may read them. The toolkit does not encrypt browser storage.
+
+Imported zoning/Pure evidence, reviewer fields and prompt inputs are not written
+to browser storage by the toolkit. They remain in active page memory while
+needed; changing routes or closing the page discards their active form views.
+Clipboard copies and downloads leave the active page and need separate care.
+Browser extensions, browser session restoration and device policies are outside
+the toolkit's control.
+
+Enter only synthetic or redacted examples. Remove passwords, tokens, private
+keys, customer names, serial numbers, private network addresses and unredacted
+logs. Use consistent replacement labels when relationships must be preserved.
+Inspect exported files and composed prompts before sharing them elsewhere.
+
+In About, turn off “Save toolkit inputs in this browser” for session-only use.
+This removes the existing seh-v1 record and prevents further writes from this
+tab. A sessionStorage flag remembers the choice for this tab across reloads;
+working inputs are not retained on reload. A new tab can use its own setting.
+Other open tabs can still save their own inputs; close them or disable saving
+there too when clearing shared browser data.
+
+“Clear this browser’s saved toolkit data” removes seh-v1 and clears the current
+toolkit's working saved inputs. It does not delete downloaded files, clipboard
+contents, browser caches/history or data in another browser profile. If storage
+access is blocked, use your browser's site-data settings. Evidence is not
+included in persisted state or in this privacy-statement download.
+
+Report application security concerns privately through the GitHub repository's
+Security advisory reporting feature when available. See SECURITY.md in the
+repository. Do not put secrets or production evidence in public issues.

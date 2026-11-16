@@ -53,11 +53,11 @@ npx playwright install --with-deps chromium
 npm run test:browser
 ```
 
-The runner packages the static application, starts a temporary local server, runs all eight suites sequentially and fails on any suite failure. CI deploys that exact tested artifact. `TEST_URL` optionally targets an existing deployment; `BROWSER_SUITES` selects named suites for focused verification. Failure screenshots are retained in ignored `test-artifacts/`. Playwright is a pinned development dependency; the website has no runtime dependencies.
+The runner packages the static application, starts a temporary local server, runs all nine suites sequentially and fails on any suite failure. CI deploys that exact tested artifact. `TEST_URL` optionally targets an existing deployment; `BROWSER_SUITES` selects named suites for focused verification. Failure screenshots are retained in ignored `test-artifacts/`. Playwright is a pinned development dependency; the website has no runtime dependencies.
 
 ## Deployment
 
-The GitHub Actions workflow checks syntax, release metadata, all 122 catalog commands, unit tests and all eight browser suites on pull requests and main pushes. Pages deployment depends on successful validation and publishes the same 22 packaged application files. PR jobs have read-only permissions and cannot deploy. A manual dispatch is also available. Repository branch-protection requirements are managed separately.
+The GitHub Actions workflow checks syntax, release metadata, all 122 catalog commands, unit tests and all nine browser suites on pull requests and main pushes. Pages deployment depends on successful validation and publishes the same 47 packaged application files. PR jobs have read-only permissions and cannot deploy. A manual dispatch is also available. Repository branch-protection requirements are managed separately.
 
 ## Pure Storage workspace
 
@@ -114,3 +114,12 @@ The [About, bio & sources](https://darisisuresh.github.io/storage-engineering-hu
 See [GitHub releases](https://github.com/darisisuresh/storage-engineering-hub/releases), [CHANGELOG.md](CHANGELOG.md), [P0 review tracking](docs/P0_REVIEW.md), and the [offline evidence contract](docs/CHANGE_EVIDENCE.md). SAN zoning requires fresh complete imported state and human review; rollback requires a distinct post-change capture. Supplied evidence is not live verification. Evidence and reviewer details are not persisted.
 
 Pure builders use the [Pure evidence contract](docs/CHANGE_EVIDENCE.md#pure-storage-flasharray). Unsupported, incomplete or ambiguous state blocks output. An offline pass is not live device verification.
+
+
+## Architecture, privacy and contribution policy
+
+See [the architecture guide](docs/architecture/README.md) for routing, shared components, storage, export and tool boundaries. The site remains buildless with no runtime dependencies. [P2 review tracking](docs/P2_REVIEW.md) records the scope and verification.
+
+In About, turn off **Save toolkit inputs in this browser** for session-only use, remove saved toolkit inputs, or download the [privacy statement](privacy.txt). Enter synthetic or redacted data only; imported evidence, reviewer controls and prompt inputs are excluded from toolkit persistence. Clipboard copies, downloads and other open tabs require separate handling.
+
+See [SECURITY.md](SECURITY.md) for private reporting and the offline trust boundary, and [CONTRIBUTING.md](CONTRIBUTING.md) for changes. [LICENSE](LICENSE) preserves the project's existing **all rights reserved** terms.

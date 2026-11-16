@@ -1,0 +1,7 @@
+/* HPE extends the existing vendor workspace. */
+.vendor-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.vendor-hpe{background:color-mix(in srgb,var(--panel) 88%,#009b87 12%)}.vendor-hpe .vendor-icon{color:#008c78}.hpe-banner{background:linear-gradient(120deg,var(--panel),color-mix(in srgb,var(--panel) 75%,#009b87 25%));padding:32px}.hpe-banner h2{font-size:clamp(28px,4vw,42px);line-height:1.15}.hpe-tabs{margin-bottom:20px}#hpe-results h2{font-size:22px}#hpe-results p{line-height:1.65}#hpe-plan-form{display:grid;gap:18px}#hpe-cli-note{margin-top:18px}
+@media(max-width:1100px){.vendor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vendor-grid .vendor-pure{grid-column:auto}}
+@media(max-width:480px){#main[data-page=hpe] .grid{grid-template-columns:minmax(0,1fr)}.hpe-banner{padding:22px}}
+
+.hpe-tabs a.selected,.hpe-tabs a:hover{background:color-mix(in srgb,var(--panel) 88%,#009b87 12%);color:var(--ink);border-color:#009b8777}
+

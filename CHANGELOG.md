@@ -2,6 +2,21 @@
 
 Versioned releases record completed changes, their validation and remaining limits. No earlier tag is rewritten.
 
+## [1.4.0] — 2026-11-15
+
+### Fixed
+- P2 maintainability: separate routing, shared UI/icons/transfers, persistence, export composition and individual tool views; keep existing offline safety contracts.
+- Split feature styles into ordered modules and package nested assets with explicit allowlisting.
+
+### Added
+- Session-only saving control, local-data removal, contextual redaction guidance and downloadable privacy statement.
+- Security policy, contribution guidance, architecture documentation and a standalone LICENSE preserving existing all-rights-reserved terms.
+- CI syntax/local-asset checks for every packaged module and P2 migration, storage, navigation and export regression coverage.
+
+### Updated
+- Development and review documentation for the modular buildless application.
+- Validation and limits are recorded in docs/P2_REVIEW.md; no vendor equipment verification or new diagnostic analyzer is claimed.
+
 ## [1.3.0] — 2026-11-15
 
 ### Fixed

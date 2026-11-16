@@ -64,3 +64,8 @@ The shared shell and all ten routes were restyled with a forest sidebar, native 
 ## v1.3.0 — P1 review fixes
 
 Syntax/release metadata checks, validation of 122 unique catalog commands, 42 unit tests and all eight local Chromium suites passed. Browser coverage includes the main, Pure, Popular, HPE and Evolution workspaces, both P0 safety suites, and the new P1 metadata/capacity regression. Metadata targets remain unverified, unknown privileges/dates are visible, and injected release text is escaped. RAID accounting distinguishes spares/protection and explicitly excludes vendor overhead. CI runs the same browser gate on PRs/main and deploys only its tested artifact. No equipment/lab validation or branch-protection configuration is claimed. See docs/P1_REVIEW.md.
+
+
+## v1.4.0 — P2 maintainability and documentation
+
+Syntax/release metadata checks, local references for all 47 packaged assets, validation of 122 distinct commands, 47 unit tests and all nine local Chromium suites passed. The new P2 suite covers legacy saved data, session-only mode and reloads, persistence filtering, privacy download, data removal, history/deep links, blocked browser storage and responsive modular styles. Existing P0 adversarial suites and all vendor/tool browser suites passed. Private GitHub vulnerability reporting was enabled and confirmed. Licensing retains existing all-rights-reserved terms. No equipment was queried or tested; see docs/P2_REVIEW.md for exact scope and limits.
